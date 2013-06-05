@@ -1,0 +1,7 @@
+dist/
+target/
+.classpath
+.project
+.settings/
+.RData
+.Rhistory
