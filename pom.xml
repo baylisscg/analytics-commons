@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>au.edu.uq.aurin</groupId>
 	<artifactId>analytics-commons</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1</version>
 	<packaging>jar</packaging>
 
 	<name>analytics-commons</name>
@@ -72,7 +72,7 @@
 			<id>uqaurin-snapshots</id>
 			<url>http://maven.metadata.net/artifactory/libs-snapshots-public/</url>
 			<snapshots>
-				<enabled>true</enabled>
+				<enabled>false</enabled>
 			</snapshots>
 		</repository>
 	</repositories>
