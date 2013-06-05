@@ -1,5 +1,5 @@
 
-R Statistical utilities
+R Statistical Backend utilities
 
 * R Script Loader as String
 
