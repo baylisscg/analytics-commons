@@ -11,6 +11,20 @@
 	<name>analytics-commons</name>
 	<url>https://github.com/AURIN/analytics-commons</url>
 
+	<distributionManagement>
+		<repository>
+			<id>aurin</id>
+			<url>https://mvn.aurin.org.au/nexus/content/repositories/stable/</url>
+			<name>AURIN Releases</name>
+		</repository>
+		<snapshotRepository>
+			<id>aurin-snapshots</id>
+			<url>https://mvn.aurin.org.au/nexus/content/repositories/snapshots/</url>
+			<name>AURIN Snapshots</name>
+		</snapshotRepository>
+	</distributionManagement>
+
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
