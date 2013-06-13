@@ -81,8 +81,8 @@ public class Rserve {
 	 * <code>launchRserve(cmd, "--no-save --slave", "--no-save --slave", false)</code>
 	 */
 	public static boolean launchRserve(String cmd) {
-		return launchRserve(cmd, "-q --no-save --slave --no-restore --vanilla",
-				"-q --no-save --slave --no-restore --vanilla", false);
+		return launchRserve(cmd, "-q --no-save --slave --no-restore",
+				"-q --no-save --slave --no-restore", false);
 	}
 
 	/**
