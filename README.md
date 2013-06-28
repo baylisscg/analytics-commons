@@ -1,4 +1,6 @@
 
+analytics-commons 'rlogging' branch to support statistics 'logging' branch
+
 Master branch: development
 
 Stable versions:
