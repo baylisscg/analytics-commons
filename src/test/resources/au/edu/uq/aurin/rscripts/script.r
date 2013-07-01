@@ -19,19 +19,37 @@ argsError <- function(numArgs, nArgs) {
 ## Check if the input is valid object type
 ## Make sure to catch the input errors early
 ## return 'TRUE' in case of error
-inputError <- function(iData, options) {
+inputError <- function(iData, iOptions) {
   
 }
 
 ########## METHOD_NAME STATISTIC COMPUTE ##########
 ## return 'NULL' in case of error
-METHOD_NAME <- function(iData, options) {
+METHOD_NAME <- function(iData, iOptions) {
 
+	## load the logging commons script
+	## this could be done at the start of the script file
+	print("START:: Sourcing logging commons")
+	source("loggingCommons.r")
+	print("DONE:: Sourcing logging commons")
+	
+	optionsLogging <- data.frame(LOG_LEVEL=5, LOG_DIRECTORY="/tmp")
+	rLog <- setupLogging(optionsLogging)
+#	print('METHOD_NAME:: rLog = '); print(rLog)
+	print("Now we can use rLog for logging")
+	
+	debug(rLog, "DEBUG:: Hello using the logger rLog")
+	info(rLog, "INFO:: Hello using the logger rLog") 
 }
 
 ## Test method with sample/dummy data to check working of algorithm
 TestMETHOD_NAME <- function() {
 
+	# setup input options
+	iData <<- data.frame()
+	iOptions <<- data.frame()
+	
+	METHOD_NAME(iData, iOptions)
 }
 
 ## TEST RUN
@@ -44,5 +62,5 @@ TestMETHOD_NAME <- function() {
 
 ## To check TESTMETHOD_NAME() uncomment it above and 
 ## comment the line below METHOD_NAME(....)
-METHOD_NAME(iData, options)
+METHOD_NAME(iData, iOptions)
 
