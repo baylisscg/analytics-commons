@@ -1,5 +1,17 @@
 
-analytics-commons 'rlogging' branch to support statistics 'logging' branch
+Important R dependencies:
+
+1. Install R library 'log4r' globally
+sudo R
+> install.packages("log4r")
+> q() #quit
+
+2. Install the loggingCommons_*.tar.gz R package before using the logging framework
+cd analytics-commons/Rpackages
+sudo R CMD install loggingCommons_1.0.tar.gz
+
+
+analytics-commons 'rlogging' branch to support statistics 'master/logging' branch
 
 Master branch: development
 

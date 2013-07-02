@@ -5,3 +5,5 @@ target/
 .settings/
 .RData
 .Rhistory
+.Rbuildignore
+.Rproj.user/

@@ -1,0 +1,9 @@
+Package: loggingCommons
+Type: Package
+Title: R Logging based on the log4r package
+Version: 1.0
+Date: 2013-07-02
+Author: Irfan Azeez
+Maintainer: Irfan Azeez <irfan@itee.uq.edu.au>
+Description: Setting up the logging framework to be used by setting the LOG_LEVEL and LOG_DIRECTORY
+License: BSD
