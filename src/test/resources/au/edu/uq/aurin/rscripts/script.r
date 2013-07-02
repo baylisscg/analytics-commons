@@ -27,12 +27,8 @@ inputError <- function(iData, iOptions) {
 ## return 'NULL' in case of error
 METHOD_NAME <- function(iData, iOptions) {
 
-	## load the logging commons script
-	## this could be done at the start of the script file
-	print("START:: Sourcing logging commons")
-	location <- paste("util",  .Platform$file.sep, "loggingCommons.r", sep="", collapse="")
-	print("OS specific PATH generation"); print(location)
-	source(location)
+	## load the logging commons package
+	library("loggingCommons")
 	print("DONE:: Sourcing logging commons")
 	
 	optionsLogging <- data.frame(LOG_LEVEL=5, LOG_DIRECTORY="/tmp")
