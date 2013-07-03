@@ -18,17 +18,9 @@ libraryError <- function() {
 }
 
 ## This is the method that needs to be called after sourcing the script, see TestLoggingCommons()
-setupLogging <- function(optionsLogging) {
+setupLogging <- function(optionsLogging=NULL) {
 
-    print(paste("Logging LEVEL:", optionsLogging$LOG_LEVEL, ", Logging DIRECTORY: ", optionsLogging$LOG_DIRECTORY))
-    if((optionsLogging$LOG_LEVEL == 0) || (optionsLogging$LOG_LEVEL < 0)){
-        # disable logging
-        print(paste("Logging DISABLED, LOG_LEVEL = ", optionsLogging$LOG_LEVEL));
-        rlogger <- create.logger(logfile="");
-        print("Logging to CONSOLE: ")
-        level(rlogger) <- verbosity(1) # log level 5 - FATAL only
-    } else {
-    ## } else if((optionsLogging$LOG_LEVEL >= 1) && (optionsLogging$LOG_LEVEL < 6)) {
+    if(is.numeric(optionsLogging$LOG_LEVEL) == TRUE) {
         print(paste("Logging ENABLED, LOG_LEVEL = ", optionsLogging$LOG_LEVEL))
         lFile <- paste(
                     optionsLogging$LOG_DIRECTORY, 
@@ -40,12 +32,17 @@ setupLogging <- function(optionsLogging) {
         print(paste("Logging FILE: ", lFile))
         rlogger <- create.logger(logfile=lFile)
         level(rlogger) <- verbosity(optionsLogging$LOG_LEVEL)
-##    } else {
-        ## setup max log level '1' for DEBUG
-##        level(rlogger) <- verbosity(optionsLogging$LOG_LEVEL)
+    } else {
+        ## No logger scenario
+        print("NO Logging");
+        rlogger <- create.logger(logfile="");
+        print("Logging to CONSOLE: ")
+        level(rlogger) <- verbosity(1) # log level 5 - FATAL only
     }
     
     info(rlogger, c("str(rlogger) = ", capture.output(str(rlogger))))
+
+    print(paste("Logging LEVEL:", optionsLogging$LOG_LEVEL, ", Logging DIRECTORY: ", optionsLogging$LOG_DIRECTORY))
     return(rlogger);
 }
 
@@ -53,11 +50,19 @@ setupLogging <- function(optionsLogging) {
 TestLoggingCommons <- function() {
 
 	if(libraryError() == FALSE) {
+        # 1. Case where logging is defined
 		optionsLogging <- data.frame(LOG_LEVEL=5, LOG_DIRECTORY="/tmp")
 		rLog <- setupLogging(optionsLogging)
 		print('rLog = '); print(rLog)
 		debug(rLog, "DEBUG:: Hello from TestLoggingCommons()")
 		info(rLog, "INFO:: Hello from TestLoggingCommons()")
+
+        # 2. Case where no logging is defined
+        rm(optionsLogging) # exists(optionsLogging) == FALSE
+		rLog <- setupLogging()
+		print('NO LOGGING: rLog = '); print(rLog)
+		debug(rLog, "NO LOGGING: DEBUG:: Hello from TestLoggingCommons()")
+		info(rLog, "NO LOGGING: INFO:: Hello from TestLoggingCommons()")
 	} else {
 		print("Error loading library: log4r")
 	}
