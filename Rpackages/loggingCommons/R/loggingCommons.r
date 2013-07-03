@@ -2,6 +2,8 @@
 # Source this file and then call the setupLogging method with a dataFrame input optionsLogging
 # For usage see: TestLoggingCommons() method
 
+## Log Level values: 1=DEBUG, 2=INFO 3=WARN, 4=ERROR, 5=FATAL
+
 libraryError <- function() {
 	  errorLibraries <- FALSE
 	  
@@ -16,13 +18,13 @@ libraryError <- function() {
 setupLogging <- function(optionsLogging) {
 
     print(paste("Logging LEVEL:", optionsLogging$LOG_LEVEL, ", Logging DIRECTORY: ", optionsLogging$LOG_DIRECTORY))
-    if(optionsLogging$LOG_LEVEL == 0) {
+    if((optionsLogging$LOG_LEVEL == 0) || (optionsLogging$LOG_LEVEL < 0)){
         # disable logging
         print(paste("Logging DISABLED, LOG_LEVEL = ", optionsLogging$LOG_LEVEL));
         rlogger <- create.logger(logfile="");
         print("Logging to CONSOLE: ")
-        level(rlogger) <- verbosity(1)
-    } else {
+        level(rlogger) <- verbosity(1) # log level 5 - FATAL only
+    } else if((optionsLogging$LOG_LEVEL >= 1) && (optionsLogging$LOG_LEVEL < 6)) {
         print(paste("Logging ENABLED, LOG_LEVEL = ", optionsLogging$LOG_LEVEL))
         lFile <- paste(
                     optionsLogging$LOG_DIRECTORY, 
@@ -33,6 +35,9 @@ setupLogging <- function(optionsLogging) {
                     collapse="")
         print(paste("Logging FILE: ", lFile))
         rlogger <- create.logger(logfile=lFile)
+        level(rlogger) <- 6 - verbosity(optionsLogging$LOG_LEVEL)
+    } else {
+        ## setup max log level '1' for DEBUG
         level(rlogger) <- verbosity(optionsLogging$LOG_LEVEL)
     }
     
@@ -44,7 +49,7 @@ setupLogging <- function(optionsLogging) {
 TestLoggingCommons <- function() {
 
 	if(libraryError() == FALSE) {
-		optionsLogging <<- data.frame(LOG_LEVEL=5, LOG_DIRECTORY="/tmp")
+		optionsLogging <- data.frame(LOG_LEVEL=5, LOG_DIRECTORY="/tmp")
 		rLog <- setupLogging(optionsLogging)
 		print('rLog = '); print(rLog)
 		debug(rLog, "DEBUG:: Hello from TestLoggingCommons()")
