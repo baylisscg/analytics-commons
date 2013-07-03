@@ -64,9 +64,10 @@ public class Rlogger {
 			if ((!log_directory.isEmpty()) && (new File(log_directory).isDirectory())) {
 				DIRECTORY = log_directory;
 			} else {
-				String msg = "Log directory: " + log_directory + ", not found.";
-				LOG.error(msg);
-				throw new IOException(msg);
+				String msg = "Log directory: " + log_directory + ", not found."; 
+				LOG.info(msg);
+				DIRECTORY = null; // null logging
+//				throw new IOException(msg);
 			}
 		}
 	}
