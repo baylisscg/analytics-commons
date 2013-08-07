@@ -3,9 +3,12 @@
 # For usage see: TestLoggingCommons() method
 
 ## Log Level values to use for the logger: 5=DEBUG, 4=INFO 3=WARN, 2=ERROR, 1=FATAL
-
+## list(OFF=1, ERROR=2, WARN=3, INFO=4, DEBUG=5, TRACE=6)
 ## Internal only:
 # Log Level verbosity method values are: 1=DEBUG, 2=INFO 3=WARN, 4=ERROR, 5=FATAL
+
+## Trace=6 is unsupported
+logListLevels <- list(OFF=1, ERROR=2, WARN=3, INFO=4, DEBUG=5, TRACE=6)
 
 libraryError <- function() {
 	  errorLibraries <- FALSE
@@ -20,7 +23,15 @@ libraryError <- function() {
 ## This is the method that needs to be called after sourcing the script, see TestLoggingCommons()
 setupLogging <- function(optionsLogging=NULL) {
 
-    if(is.numeric(optionsLogging$LOG_LEVEL) == TRUE) {
+    # Drop stringsAsFactors in DataFrame: optionsLogging using paste()
+
+    if(is.null(optionsLogging)) {
+        ## No logger scenario
+        print("NO Logging");
+        rlogger <- create.logger(logfile="");
+        print("Logging to CONSOLE: ")
+        level(rlogger) <- verbosity(1) # log level 5 - FATAL or 6 - TRACE only
+    } else if(is.numeric(optionsLogging$LOG_LEVEL) == TRUE) {
         print(paste("Logging ENABLED, LOG_LEVEL = ", optionsLogging$LOG_LEVEL))
         lFile <- paste(
                     optionsLogging$LOG_DIRECTORY, 
@@ -32,14 +43,29 @@ setupLogging <- function(optionsLogging=NULL) {
         print(paste("Logging FILE: ", lFile))
         rlogger <- create.logger(logfile=lFile)
         level(rlogger) <- verbosity(optionsLogging$LOG_LEVEL)
+    } else if(is.character(paste(optionsLogging$LOG_LEVEL)) == TRUE) {
+        ## Textual log level specified
+        print(paste("Logging ENABLED, 'Character' LOG LEVEL =", optionsLogging$LOG_LEVEL))
+        numLogLevel <- logListLevels[[toupper(paste(optionsLogging$LOG_LEVEL, sep="", collapse=""))]]
+        print(paste("Logging ENABLED, 'Numeric converted' LOG LEVEL =", numLogLevel))
+        if(is.null(numLogLevel) == TRUE) {
+            numLogLevel <- 1 # same as no logging if NULL
+        }
+        ## setup the logger
+        lFile <- paste(
+                    optionsLogging$LOG_DIRECTORY, 
+                    .Platform$file.sep, 
+                    Sys.Date(), 
+                    ".rlog", 
+                    sep="", 
+                    collapse="")
+        print(paste("Logging FILE: ", lFile))
+        rlogger <- create.logger(logfile=lFile)
+        level(rlogger) <- verbosity(numLogLevel)
     } else {
-        ## No logger scenario
-        print("NO Logging");
-        rlogger <- create.logger(logfile="");
-        print("Logging to CONSOLE: ")
-        level(rlogger) <- verbosity(1) # log level 5 - FATAL only
+        stop("ERROR: UNKNOWN LOGGER STATE. Should not have happened")
     }
-    
+
     info(rlogger, c("str(rlogger) = ", capture.output(str(rlogger))))
 
     print(paste("Logging LEVEL:", optionsLogging$LOG_LEVEL, ", Logging DIRECTORY: ", optionsLogging$LOG_DIRECTORY))
@@ -63,8 +89,14 @@ TestLoggingCommons <- function() {
 		print('NO LOGGING: rLog = '); print(rLog)
 		debug(rLog, "NO LOGGING: DEBUG:: Hello from TestLoggingCommons()")
 		info(rLog, "NO LOGGING: INFO:: Hello from TestLoggingCommons()")
+
+        # 3. Case of input log level being a String/Char.array
+		optionsLogging <- data.frame(LOG_LEVEL="DEBUG", LOG_DIRECTORY="/tmp")
+		rLog <- setupLogging(optionsLogging)
+		print('rLog = '); print(rLog)
+
 	} else {
-		print("Error loading library: log4r")
+		stop("Error loading library: log4r. Please install R package log4r")
 	}
 }
 
