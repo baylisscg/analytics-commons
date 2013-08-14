@@ -75,25 +75,30 @@ setupLogging <- function(optionsLogging=NULL) {
 ## Lower number for more debug output
 TestLoggingCommons <- function() {
 
+    # default value
+    optionsLogging <<- NULL
+
 	if(libraryError() == FALSE) {
         # 1. Case where logging is defined
 		optionsLogging <- data.frame(LOG_LEVEL=5, LOG_DIRECTORY="/tmp")
 		rLog <- setupLogging(optionsLogging)
 		print('rLog = '); print(rLog)
-		debug(rLog, "DEBUG:: Hello from TestLoggingCommons()")
-		info(rLog, "INFO:: Hello from TestLoggingCommons()")
+		debug(rLog, "DEBUG:: LOG_LEVEL in INTEGER format in TestLoggingCommons()")
+		info(rLog, "INFO:: LOG_LEVEL in INTEGER format in TestLoggingCommons()")
 
         # 2. Case where no logging is defined
         rm(optionsLogging) # exists(optionsLogging) == FALSE
 		rLog <- setupLogging()
 		print('NO LOGGING: rLog = '); print(rLog)
-		debug(rLog, "NO LOGGING: DEBUG:: Hello from TestLoggingCommons()")
-		info(rLog, "NO LOGGING: INFO:: Hello from TestLoggingCommons()")
+		debug(rLog, "NO LOGGING: DEBUG:: from TestLoggingCommons()")
+		info(rLog, "NO LOGGING: INFO:: from TestLoggingCommons()")
 
         # 3. Case of input log level being a String/Char.array
 		optionsLogging <- data.frame(LOG_LEVEL="DEBUG", LOG_DIRECTORY="/tmp")
 		rLog <- setupLogging(optionsLogging)
-		print('rLog = '); print(rLog)
+        print('rLog = '); print(rLog)
+		debug(rLog, "DEBUG:: LOG_LEVEL in TEXT format in TestLoggingCommons()")
+		info(rLog, "INFO:: LOG_LEVEL in TEXT format in TestLoggingCommons()")	
 
 	} else {
 		stop("Error loading library: log4r. Please install R package log4r")
