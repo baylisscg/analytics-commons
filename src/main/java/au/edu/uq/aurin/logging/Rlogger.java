@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 
 import org.rosuda.REngine.REXP;
-import org.rosuda.REngine.REXPInteger;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.REXPString;
 import org.rosuda.REngine.RList;
@@ -13,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 public class Rlogger {
 
-	private static int LEVEL;
+	private static String LEVEL;
 	private static String DIRECTORY;
 
 	protected static final Logger LOG = LoggerFactory.getLogger(Rlogger.class);
@@ -21,11 +20,15 @@ public class Rlogger {
 	public static REXP logOptions;
 
 	public static void logger() throws REXPMismatchException, IOException {
-		logger(0, System.getProperty("java.io.tmpdir")); // logLevel = 0, logDirectory = java temp directory
+		logger("OFF", System.getProperty("java.io.tmpdir")); // logLevel = "OFF",
+															// logDirectory =
+															// java temp
+															// directory
 		LOG.info("Java Temp Path = {}", System.getProperty("java.io.tmpdir"));
 	}
 
-	public static void logger(int log_level, String log_directory) throws REXPMismatchException, IOException {
+	public static void logger(String log_level, String log_directory)
+			throws REXPMismatchException, IOException {
 		setLog_level(log_level);
 		setLog_directory(log_directory);
 		setupREXPLogOptions();
@@ -33,24 +36,39 @@ public class Rlogger {
 
 	private static void setupREXPLogOptions() throws REXPMismatchException {
 		RList op = new RList();
-		op.put("LOG_LEVEL", new REXPInteger(Rlogger.LEVEL));
+		op.put("LOG_LEVEL", new REXPString(Rlogger.LEVEL));
 		op.put("LOG_DIRECTORY", new REXPString(Rlogger.DIRECTORY));
 		logOptions = REXP.createDataFrame(op);
 	}
 
-	public static int getLog_level() {
+	public static String getLog_level() {
 		LOG.info("current log level: {}", LEVEL);
 		return LEVEL;
 	}
 
-	private static void setLog_level(int log_level) {
-		if (log_level > 0 && log_level < 6) {
-			LEVEL = log_level;
-		} else if (log_level > 6) {
-			LEVEL = 5; // max log level
-		} else {
-			LEVEL = 0; // no logging
+	private static void setLog_level(String log_level) {
+		if (log_level != null) {
+			if (log_level.isEmpty()) {
+				LEVEL = "OFF";
+			} else if (log_level.compareToIgnoreCase("OFF") == 0
+					|| log_level.compareToIgnoreCase("ERROR") == 0
+					|| log_level.compareToIgnoreCase("WARN") == 0
+					|| log_level.compareToIgnoreCase("INFO") == 0
+					|| log_level.compareToIgnoreCase("DEBUG") == 0
+					|| log_level.compareToIgnoreCase("TRACE") == 0) {
+				LEVEL = log_level.toUpperCase();
+			} else {
+				LEVEL = "OFF";
+			}
 		}
+		//
+		// if (log_level > 0 && log_level < 6) {
+		// LEVEL = log_level;
+		// } else if (log_level > 6) {
+		// LEVEL = 5; // max log level
+		// } else {
+		// LEVEL = 0; // no logging
+		// }
 	}
 
 	public static String getLog_directory() {
@@ -58,16 +76,18 @@ public class Rlogger {
 		return DIRECTORY;
 	}
 
-	private static void setLog_directory(String log_directory) throws IOException {
+	private static void setLog_directory(String log_directory)
+			throws IOException {
 		DIRECTORY = "."; // default log directory = "."
 		if (log_directory != null) {
-			if ((!log_directory.isEmpty()) && (new File(log_directory).isDirectory())) {
+			if ((!log_directory.isEmpty())
+					&& (new File(log_directory).isDirectory())) {
 				DIRECTORY = log_directory;
 			} else {
-				String msg = "Log directory: " + log_directory + ", not found."; 
+				String msg = "Log directory: " + log_directory + ", not found.";
 				LOG.info(msg);
 				DIRECTORY = null; // null logging
-//				throw new IOException(msg);
+				// throw new IOException(msg);
 			}
 		}
 	}
