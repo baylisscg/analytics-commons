@@ -43,7 +43,7 @@ setupLogging <- function(optionsLogging=NULL) {
         print(paste("Logging FILE: ", lFile))
         rlogger <- create.logger(logfile=lFile)
         level(rlogger) <- verbosity(optionsLogging$LOG_LEVEL)
-    } else if(is.character(paste(optionsLogging$LOG_LEVEL)) == TRUE) {
+    } else if(is.character(paste(optionsLogging$LOG_LEVEL, sep="", collapse="")) == TRUE) {
         ## Textual log level specified
         print(paste("Logging ENABLED, 'Character' LOG LEVEL =", optionsLogging$LOG_LEVEL))
         numLogLevel <- logListLevels[[toupper(paste(optionsLogging$LOG_LEVEL, sep="", collapse=""))]]
@@ -61,6 +61,9 @@ setupLogging <- function(optionsLogging=NULL) {
                     collapse="")
         print(paste("Logging FILE: ", lFile))
         rlogger <- create.logger(logfile=lFile)
+        print("numLogLEVEL = "); print(numLogLevel)
+        print("str(numLogLevel) = "); print(str(numLogLevel))
+ #       print('str(getAnywhere("LEVELS")) = '); print(str(getAnywhere("LEVELS")))
         level(rlogger) <- verbosity(numLogLevel)
     } else {
         stop("ERROR: UNKNOWN LOGGER STATE. Should not have happened")
@@ -80,13 +83,14 @@ TestLoggingCommons <- function() {
 
 	if(libraryError() == FALSE) {
         # 1. Case where logging is defined
-		optionsLogging <- data.frame(LOG_LEVEL=5, LOG_DIRECTORY="/tmp")
+		optionsLogging <<- data.frame(LOG_LEVEL=5, LOG_DIRECTORY="/tmp")
 		rLog <- setupLogging(optionsLogging)
 		print('rLog = '); print(rLog)
 		debug(rLog, "DEBUG:: LOG_LEVEL in INTEGER format in TestLoggingCommons()")
 		info(rLog, "INFO:: LOG_LEVEL in INTEGER format in TestLoggingCommons()")
 
         # 2. Case where no logging is defined
+        optionsLogging <- NULL
         rm(optionsLogging) # exists(optionsLogging) == FALSE
 		rLog <- setupLogging()
 		print('NO LOGGING: rLog = '); print(rLog)
@@ -94,7 +98,7 @@ TestLoggingCommons <- function() {
 		info(rLog, "NO LOGGING: INFO:: from TestLoggingCommons()")
 
         # 3. Case of input log level being a String/Char.array
-		optionsLogging <- data.frame(LOG_LEVEL="DEBUG", LOG_DIRECTORY="/tmp")
+		optionsLogging <<- data.frame(LOG_LEVEL="DEBUG", LOG_DIRECTORY="/tmp")
 		rLog <- setupLogging(optionsLogging)
         print('rLog = '); print(rLog)
 		debug(rLog, "DEBUG:: LOG_LEVEL in TEXT format in TestLoggingCommons()")
