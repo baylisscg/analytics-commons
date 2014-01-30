@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>au.edu.uq.aurin</groupId>
 	<artifactId>analytics-commons</artifactId>
-	<version>0.2-SNAPSHOT</version>
+	<version>0.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>analytics-commons</name>
@@ -21,6 +21,12 @@
 			<name>AURIN Snapshots</name>
 		</snapshotRepository>
 	</distributionManagement>
+
+	<scm>
+		<url>http://github.com/AURIN/workflow</url>
+		<connection>scm:git:git://github.com/AURIN/workflow.git</connection>
+		<tag>HEAD</tag>
+	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -87,5 +93,19 @@
 			</snapshots>
 		</repository>
 	</repositories>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<localCheckout>true</localCheckout>
+					<pushChanges>false</pushChanges>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>
