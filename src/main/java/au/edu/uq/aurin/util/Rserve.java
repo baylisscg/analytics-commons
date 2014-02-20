@@ -40,7 +40,7 @@ class StreamHog extends Thread {
       String line = null;
       while ((line = br.readLine()) != null) {
         if (capture) {
-        // we are supposed to capture the output from REG command
+          // we are supposed to capture the output from REG command
           int i = line.indexOf("InstallPath");
           if (i >= 0) {
             String s = line.substring(i + 11).trim();
@@ -79,7 +79,7 @@ public class Rserve {
 
   private Rserve() {
   }
-  
+
   /**
    * shortcut to
    * <code>launchRserve(cmd, "--no-save --slave", "--no-save --slave", false)</code>
@@ -94,13 +94,13 @@ public class Rserve {
    * using any quotes in arguments
    * 
    * @param cmd
-   *            command necessary to start R
+   *          command necessary to start R
    * @param rargs
-   *            arguments are are to be passed to R
+   *          arguments are are to be passed to R
    * @param rsrvargs
-   *            arguments to be passed to Rserve
-   * @return <code>true</code> if Rserve is running or was successfully
-   *         started, <code>false</code> otherwise.
+   *          arguments to be passed to Rserve
+   * @return <code>true</code> if Rserve is running or was successfully started,
+   *         <code>false</code> otherwise.
    */
   public static synchronized boolean launchRserve(String cmd, String rargs,
       String rsrvargs, boolean debug) {
@@ -114,22 +114,19 @@ public class Rserve {
         isWindows = true;
         p = Runtime.getRuntime().exec(
             "\"" + cmd + "\" -e \"library(Rserve);Rserve("
-                + (debug ? "TRUE" : "FALSE") + ",args='"
-                + rsrvargs + "')\" " + rargs);
+                + (debug ? "TRUE" : "FALSE") + ",args='" + rsrvargs + "')\" "
+                + rargs);
       } else {
         /* unix startup */
         p = Runtime.getRuntime().exec(
             new String[] {
                 "/bin/sh",
                 "-c",
-                "echo 'library(Rserve);Rserve("
-                    + (debug ? "TRUE" : "FALSE")
-                    + ",args=\"" + rsrvargs + "\")'|" + cmd
-                    + " " + rargs });
+                "echo 'library(Rserve);Rserve(" + (debug ? "TRUE" : "FALSE")
+                    + ",args=\"" + rsrvargs + "\")'|" + cmd + " " + rargs });
       }
       LOG.info("waiting for Rserve to start ... (" + p + ")");
-      // we need to fetch the output - some platforms will die if you
-      // don't ...
+      // Fetch the output - some platforms will die if you don't ...
       StreamHog errorHog = new StreamHog(p.getErrorStream(), false);
       StreamHog outputHog = new StreamHog(p.getInputStream(), false);
       if (!isWindows) {
@@ -141,10 +138,11 @@ public class Rserve {
       LOG.info("failed to start Rserve process with ", x);
       return false;
     }
-    /* try up to 5 times before giving up. We can be
-    * conservative here, because at this point the process
-    * execution itself was successful and the start up is
-    * usually asynchronous */
+    /*
+     * try up to 5 times before giving up. We can be conservative here, because
+     * at this point the process execution itself was successful and the start
+     * up is usually asynchronous
+     */
     int attempts = 5;
 
     while (attempts > 0) {
@@ -156,7 +154,7 @@ public class Rserve {
       } catch (Exception e2) {
         LOG.info("Try failed with: ", e2);
       }
-       /* a safety sleep just in case the start up is delayed or asynchronous */
+      /* a safety sleep just in case the start up is delayed or asynchronous */
       try {
         Thread.sleep(500);
       } catch (InterruptedException ix) {
@@ -168,8 +166,8 @@ public class Rserve {
   }
 
   /**
-   * Checks whether Rserve is running and if that's not the case it attempts
-   * to start it using the defaults for the platform where it is run on. This
+   * Checks whether Rserve is running and if that's not the case it attempts to
+   * start it using the defaults for the platform where it is run on. This
    * method is meant to be set-and-forget and cover most default setups.
    * 
    * <p>
@@ -203,15 +201,15 @@ public class Rserve {
       return launchRserve(installPath + "\\bin\\R.exe");
     }
     /* try some common unix locations of R */
-    return launchRserve("R") ||
-        ((new File("/Library/Frameworks/R.framework/Resources/bin/R"))
+    return launchRserve("R")
+        || ((new File("/Library/Frameworks/R.framework/Resources/bin/R"))
             .exists() && launchRserve("/Library/Frameworks/R.framework/Resources/bin/R"))
         || ((new File("/usr/local/lib/R/bin/R")).exists() && launchRserve("/usr/local/lib/R/bin/R"))
         || ((new File("/usr/lib/R/bin/R")).exists() && launchRserve("/usr/lib/R/bin/R"))
         || ((new File("/usr/local/bin/R")).exists() && launchRserve("/usr/local/bin/R"))
         || ((new File("/sw/bin/R")).exists() && launchRserve("/sw/bin/R"))
-        || ((new File("/usr/common/bin/R")).exists() && launchRserve("/usr/common/bin/R")) || ((new File(
-        "/opt/bin/R")).exists() && launchRserve("/opt/bin/R"));
+        || ((new File("/usr/common/bin/R")).exists() && launchRserve("/usr/common/bin/R"))
+        || ((new File("/opt/bin/R")).exists() && launchRserve("/opt/bin/R"));
   }
 
   /**
