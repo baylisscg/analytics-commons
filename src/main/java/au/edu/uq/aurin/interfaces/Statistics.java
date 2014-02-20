@@ -1,6 +1,5 @@
 package au.edu.uq.aurin.interfaces;
 
-import au.edu.uq.aurin.util.Rserve;
 import au.edu.uq.aurin.util.StatisticsException;
 
 /**
