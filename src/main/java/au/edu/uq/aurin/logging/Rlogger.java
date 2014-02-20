@@ -18,7 +18,9 @@ public class Rlogger {
   private static String DIRECTORY;
 
   private static final Logger LOG = LoggerFactory.getLogger(Rlogger.class);
-
+  
+  private static final String LOGGEROFF = "OFF";
+  
   private static REXP logOptions;
 
   private Rlogger() {
@@ -27,7 +29,7 @@ public class Rlogger {
   public static void logger() throws StatisticsException {
     // logLevel = "OFF", logDirectory = java temp directory
     String tmpDir = System.getProperty("java.io.tmpdir");
-    logger("OFF", tmpDir);
+    logger(LOGGEROFF, tmpDir);
     LOG.info("Java Temp Path = {}", tmpDir);
   }
 
@@ -61,7 +63,7 @@ public class Rlogger {
   private static void setLogLevel(String logLevel) {
     if (logLevel != null) {
       if (logLevel.isEmpty() || (logLevel.compareToIgnoreCase("OFF") == 0)) {
-        LEVEL = "OFF";
+        LEVEL = LOGGEROFF;
       } else if ((logLevel.compareToIgnoreCase("ERROR") == 0) || (logLevel.compareToIgnoreCase("WARN") == 0)) {
         LEVEL = logLevel.toUpperCase();
       } else if((logLevel.compareToIgnoreCase("INFO") == 0) || (logLevel.compareToIgnoreCase("DEBUG") == 0)) {
@@ -69,7 +71,7 @@ public class Rlogger {
       } else if(logLevel.compareToIgnoreCase("TRACE") == 0) {
         LEVEL = logLevel.toUpperCase();
       } else {
-        LEVEL = "OFF";
+        LEVEL = LOGGEROFF;
       }
     }
   }
@@ -81,17 +83,15 @@ public class Rlogger {
 
   private static void setLogDirectory(String logDirectory)
       throws IOException {
-    // default log directory = "."
-    DIRECTORY = ".";
+    DIRECTORY = null;
     if (logDirectory != null) {
-      if ((!logDirectory.isEmpty())
-          && (new File(logDirectory).isDirectory())) {
+      if ((!logDirectory.isEmpty()) && (new File(logDirectory).isDirectory())) {
         DIRECTORY = logDirectory;
       } else {
-        String msg = "Log directory: " + logDirectory + ", not found.";
-        LOG.info(msg);
         // null logging
-        DIRECTORY = null;
+        String msg = "Log directory: " + logDirectory 
+            + ", not found. Using: " + DIRECTORY + " instead.";
+        LOG.info(msg);
       }
     }
   }
