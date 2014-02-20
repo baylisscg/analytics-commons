@@ -33,32 +33,28 @@ public class StatisticsExceptionTest {
   @Test
   public void test1() {
 
-    System.out.println("Test StatisticsException Class");
-
     try {
-      try {
-        Assert
-            .assertTrue(
-                "Cannot Shutdown Rserve, Check if there are permissions "
-                    + "to shut it down if the process is owned by a different user",
-                Rserve.checkLocalRserve());
-        Assert.assertTrue("Rserve Running?", Rserve.isRserveRunning());
+      Assert.assertTrue(
+          "Cannot Shutdown Rserve, Check if there are permissions "
+              + "to shut it down if the process is owned by a different user",
+          Rserve.checkLocalRserve());
+      Assert.assertTrue("Rserve Running?", Rserve.isRserveRunning());
 
-        RConnection c = new RConnection();
-        REXP worker = c.eval("capture.output(paste(search()))");
-        // Uncomment line below to Test Statistics Exception
-        // System.out.println("worker = " + worker.asDoubleMatrix());
-        System.out.println("worker = " + worker.asString());
+      RConnection c = new RConnection();
+      REXP worker = c.eval("capture.output(paste(search()))");
 
-        c.close();
-        Rserve.shutdownRserve();
-      } catch (RserveException e) {
-        throw new StatisticsException(e);
-      } catch (REXPMismatchException e) {
-        throw new StatisticsException(e);
-      }
-    } catch (StatisticsException e) {
-      Assert.fail("Test Failed: " + ExceptionUtils.getFullStackTrace(e));
+      System.out.println("worker = " + worker.asString());
+      // Uncomment line below to Test Statistics Exception
+//       System.out.println("worker = " + worker.asDoubleMatrix());
+      
+      c.close();
+      Rserve.shutdownRserve();
+    } catch (RserveException e) {
+      Assert.fail("Rserve: "
+          + ExceptionUtils.getFullStackTrace(new StatisticsException(e)));
+    } catch (REXPMismatchException e) {
+      Assert.fail("Mismatch: "
+          + ExceptionUtils.getFullStackTrace(new StatisticsException(e)));
     }
   }
 
