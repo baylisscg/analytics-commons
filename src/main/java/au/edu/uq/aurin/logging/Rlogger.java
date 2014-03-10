@@ -14,8 +14,8 @@ import au.edu.uq.aurin.util.StatisticsException;
 
 public class Rlogger {
 
-  private static String LEVEL;
-  private static String DIRECTORY;
+  private static String level;
+  private static String directory;
 
   private static final Logger LOG = LoggerFactory.getLogger(Rlogger.class);
   
@@ -46,8 +46,8 @@ public class Rlogger {
 
   private static void setupREXPLogOptions() throws StatisticsException {
     RList op = new RList();
-    op.put("LOG_LEVEL", new REXPString(Rlogger.LEVEL));
-    op.put("LOG_DIRECTORY", new REXPString(Rlogger.DIRECTORY));
+    op.put("LOG_LEVEL", new REXPString(Rlogger.level));
+    op.put("LOG_DIRECTORY", new REXPString(Rlogger.directory));
     try {
       setLogOptions(REXP.createDataFrame(op));
     } catch (REXPMismatchException e) {
@@ -56,41 +56,41 @@ public class Rlogger {
   }
 
   public static String getLogLevel() {
-    LOG.info("current log level: {}", LEVEL);
-    return LEVEL;
+    LOG.info("current log level: {}", level);
+    return level;
   }
 
   private static void setLogLevel(String logLevel) {
     if (logLevel != null) {
       if (logLevel.isEmpty() || (logLevel.compareToIgnoreCase("OFF") == 0)) {
-        LEVEL = LOGGEROFF;
+        level = LOGGEROFF;
       } else if ((logLevel.compareToIgnoreCase("ERROR") == 0) || (logLevel.compareToIgnoreCase("WARN") == 0)) {
-        LEVEL = logLevel.toUpperCase();
+        level = logLevel.toUpperCase();
       } else if((logLevel.compareToIgnoreCase("INFO") == 0) || (logLevel.compareToIgnoreCase("DEBUG") == 0)) {
-        LEVEL = logLevel.toUpperCase();
+        level = logLevel.toUpperCase();
       } else if(logLevel.compareToIgnoreCase("TRACE") == 0) {
-        LEVEL = logLevel.toUpperCase();
+        level = logLevel.toUpperCase();
       } else {
-        LEVEL = LOGGEROFF;
+        level = LOGGEROFF;
       }
     }
   }
 
   public static String getLogDirectory() {
-    LOG.info("current log directory: {}", DIRECTORY);
-    return DIRECTORY;
+    LOG.info("current log directory: {}", directory);
+    return directory;
   }
 
   private static void setLogDirectory(String logDirectory)
       throws IOException {
-    DIRECTORY = null;
+    directory = null;
     if (logDirectory != null) {
       if ((!logDirectory.isEmpty()) && (new File(logDirectory).isDirectory())) {
-        DIRECTORY = logDirectory;
+        directory = logDirectory;
       } else {
         // null logging
         String msg = "Log directory: " + logDirectory 
-            + ", not found. Using: " + DIRECTORY + " instead.";
+            + ", not found. Using: " + directory + " instead.";
         LOG.info(msg);
       }
     }
