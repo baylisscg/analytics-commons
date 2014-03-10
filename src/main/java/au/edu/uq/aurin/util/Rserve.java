@@ -123,7 +123,7 @@ public class Rserve {
                 "/bin/sh",
                 "-c",
                 "echo 'library(Rserve);Rserve(" + (debug ? "TRUE" : "FALSE")
-                    + ",args=\"" + rsrvargs + "\")'|" + cmd + " " + rargs });
+                    + ",args=\"" + rsrvargs + "\")'|" + cmd + " " + rargs, });
       }
       LOG.info("waiting for Rserve to start ... (" + p + ")");
       // Fetch the output - some platforms will die if you don't ...
