@@ -12,14 +12,14 @@ import org.slf4j.LoggerFactory;
 
 import au.edu.uq.aurin.util.StatisticsException;
 
-public class Rlogger {
+public final class Rlogger {
 
-  private static String level;
-  private static String directory;
+  private static final String LOGGEROFF = "OFF";
+
+  private static String level = LOGGEROFF;
+  private static String directory = null;
 
   private static final Logger LOG = LoggerFactory.getLogger(Rlogger.class);
-  
-  private static final String LOGGEROFF = "OFF";
   
   private static REXP logOptions;
 
@@ -83,9 +83,9 @@ public class Rlogger {
 
   private static void setLogDirectory(String logDirectory)
       throws IOException {
-    directory = null;
+
     if (logDirectory != null) {
-      if ((!logDirectory.isEmpty()) && (new File(logDirectory).isDirectory())) {
+      if ((!logDirectory.isEmpty()) && (new File(logDirectory).isDirectory()) && (new File(logDirectory).canWrite())) {
         directory = logDirectory;
       } else {
         // null logging
