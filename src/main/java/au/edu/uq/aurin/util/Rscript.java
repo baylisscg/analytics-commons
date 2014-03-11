@@ -8,6 +8,11 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Load the R analysis script file as a String
+ * @author irfan
+ *
+ */
 public class Rscript {
 
   private static final Logger LOG = LoggerFactory.getLogger(Rscript.class);
