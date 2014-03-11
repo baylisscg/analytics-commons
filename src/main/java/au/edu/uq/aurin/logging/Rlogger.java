@@ -12,6 +12,11 @@ import org.slf4j.LoggerFactory;
 
 import au.edu.uq.aurin.util.StatisticsException;
 
+/**
+ * {@link Rlogger} setup the logging infrastructure in R
+ * @author irfan
+ *
+ */
 public final class Rlogger {
 
   private static final String LOGGEROFF = "OFF";
@@ -26,6 +31,10 @@ public final class Rlogger {
   private Rlogger() {
   }
   
+  /**
+   * Default logging is OFF
+   * @throws StatisticsException
+   */
   public static void logger() throws StatisticsException {
     // logLevel = "OFF", logDirectory = java temp directory
     String tmpDir = System.getProperty("java.io.tmpdir");
@@ -33,6 +42,12 @@ public final class Rlogger {
     LOG.info("Java Temp Path = {}", tmpDir);
   }
 
+  /**
+   * Setup a particular logging level and a custom directory for log files
+   * @param logLevel OFF, ERROR, WARN, INFO, DEBUG
+   * @param logDirectory a writable system directory
+   * @throws StatisticsException
+   */
   public static void logger(String logLevel, String logDirectory)
       throws StatisticsException {
     setLogLevel(logLevel);
