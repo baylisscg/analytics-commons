@@ -35,11 +35,9 @@ public class RserveTest {
           + "control enabled, Check if there are permissions to shut "
           + "it down if the process is owned by a different user",
           Rserve.shutdownRserve());
+      
     } catch (RserveException re) {
       Assert.fail("Test Failed: " + ExceptionUtils.getFullStackTrace(re));
-    } finally {
-      if (c != null)
-        c.close();
     }
   }
 }
