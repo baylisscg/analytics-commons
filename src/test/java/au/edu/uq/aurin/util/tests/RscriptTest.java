@@ -18,6 +18,7 @@ import org.rosuda.REngine.Rserve.RserveException;
 
 import au.edu.uq.aurin.logging.Rlogger;
 import au.edu.uq.aurin.util.Rscript;
+import au.edu.uq.aurin.util.Rserve;
 import au.edu.uq.aurin.util.StatisticsException;
 
 public class RscriptTest {
@@ -58,6 +59,13 @@ public class RscriptTest {
     System.out.println("Rscript Unit Test");
 
     try {
+      Assert.assertTrue("Cannot Shutdown Rserve, Check if there are permissions "
+          + "to shut it down if the process is owned by a different user",
+          Rserve.checkLocalRserve());
+
+      Assert.assertTrue("Rserve Running?", Rserve.isRserveRunning());
+      RConnection c = null;
+      
       // 0. Load the script
       String script = Rscript.load("/au/edu/uq/aurin/rscripts/script.r");
       Assert.assertNotNull("Unable to load given R script", script);
