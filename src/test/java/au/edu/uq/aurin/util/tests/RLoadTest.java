@@ -10,6 +10,8 @@ import org.rosuda.REngine.RList;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
 
+import au.edu.uq.aurin.util.Rserve;
+
 public class RLoadTest {
 
   public double[] multiplier(double mult) {
@@ -84,11 +86,13 @@ public class RLoadTest {
     REXP worker = null;
     
     try {
-//      Rserve.checkLocalRserve();
-//
-//      Assert.assertTrue("Rserve Running?", Rserve.isRserveRunning());
-      RConnection c = null;
+      Assert.assertTrue("Cannot Shutdown Rserve, Check if there are permissions "
+          + "to shut it down if the process is owned by a different user",
+          Rserve.checkLocalRserve());
 
+      Assert.assertTrue("Rserve Running?", Rserve.isRserveRunning());
+      
+      RConnection c = null;
       // Make a connection if we successfully got Rserve running
       Assert.assertNotNull("Cannot Connect to Rserve", c = new RConnection());
       
