@@ -90,6 +90,7 @@ public class RscriptTest {
       REXP worker = cIn.eval("try(eval(parse(text=script)),silent=FALSE)");
       System.out.println("worker result: " + worker.toDebugString());
 
+      cIn.close();
     } catch (RserveException x) {
       Assert.fail("Test Failed: Rserve" + ExceptionUtils.getFullStackTrace(x));
     } catch (REXPMismatchException e) {
