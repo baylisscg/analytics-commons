@@ -156,7 +156,7 @@ public class Rserve {
       }
       /* a safety sleep just in case the start up is delayed or asynchronous */
       try {
-        Thread.sleep(500);
+        Thread.sleep(5000);
       } catch (InterruptedException ix) {
         LOG.info(ix.getCause().getMessage());
       }
