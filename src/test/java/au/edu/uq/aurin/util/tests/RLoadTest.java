@@ -63,8 +63,8 @@ public class RLoadTest {
     REXP data = null;
     RList a = new RList();
     
-    // Large test data
-    for (int i = 0; i < 120000; i++) {
+    // Large test data (120000)
+    for (int i = 0; i < 12000; i++) {
       a.put(("Col" + i).toString(), new REXPDouble(multiplier(i + Math.random() * 10)));
     }
 
@@ -77,7 +77,6 @@ public class RLoadTest {
     return data;
   }
   
-  @Ignore
   @Test
   public void test() {
     System.out.println("RConnection Load Testing");
