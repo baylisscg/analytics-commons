@@ -6,13 +6,9 @@ sudo R
 > install.packages("log4r")
 > q() #quit
 
-2. Install the loggingCommons_*.tar.gz R package before using the logging framework
-cd analytics-commons/Rpackages
-sudo R CMD install loggingCommons_1.0.tar.gz
-
 3. Add the listed packages above to the default R package loader
 sudo vim /etc/R/Renviron.site
-R_DEFAULT_PACKAGES='utils,grDevices,graphics,stats,classInt,psych,Hmisc,RJSONIO,log4r,loggingCommons'
+R_DEFAULT_PACKAGES='utils,grDevices,graphics,stats,classInt,psych,Hmisc,RJSONIO,log4r'
 
 
 analytics-commons 'rlogging' branch to support statistics 'master/logging' branch
