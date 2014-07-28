@@ -1,4 +1,11 @@
 
+* Stable/Master branch Release:
+Release v0.4: https://github.com/AURIN/analytics-commons/tree/master
+
+* Develop branch Release: v0.5-SNAPSHOT
+* The use of loggingCommons R package is deprecated
+* Release supports R 3.x versions
+
 Important R dependencies:
 
 1. Install R library 'log4r' globally
