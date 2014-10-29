@@ -3,8 +3,9 @@
 Release v0.4: https://github.com/AURIN/analytics-commons/tree/master
 
 * Develop branch Release: v0.5-SNAPSHOT
-* The use of loggingCommons R package is deprecated
-* Release supports R 3.x versions
+- R session, connection, compare and print dataframes from 1 or 2 Rconnections 
+- The use of loggingCommons R package is deprecated
+- Release supports R 3.x versions
 
 Important R dependencies:
 
