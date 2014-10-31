@@ -70,7 +70,7 @@ public class Rproperties {
       if(c!= null && c.isConnected()) {
         LOG.info("--- connected ---");
         REXP tRexp = c.parseAndEval("print(capture.output(ls()));");
-        LOG.info(tRexp.toString());
+        LOG.info(tRexp.toDebugString());
       } else {
         String msg = "Connection is closed or null: " + c;
         LOG.error(msg);
@@ -95,7 +95,7 @@ public class Rproperties {
       if(c!= null && c.isConnected()) {
         LOG.info("--- connected ---");
         REXP tRexp = c.parseAndEval("print(capture.output(search()));");
-        LOG.info(tRexp.toString());
+        LOG.info(tRexp.toDebugString());
       } else {
         String msg = "Connection is closed or null: " + c;
         LOG.error(msg);
