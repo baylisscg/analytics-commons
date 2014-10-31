@@ -156,22 +156,62 @@ public class Rproperties {
 
           // check metadata for the list
           Iterator<?> cmetadata = content.names.iterator();
-          // column names
-          while (cmetadata.hasNext()) {
-            String cmdata = (String) cmetadata.next();
-            LOG.info(cmdata);
-          }
+          LOG.info(content.names.toString());
           // check contents within the list
           // column content
           Iterator<?> it2 = content.iterator();
-          while (it2.hasNext()) {
+          while (it2.hasNext() || cmetadata.hasNext()) {
+            // print column name first
+            String cmdata = (String) cmetadata.next();
+            LOG.info(cmdata);
+
             REXP cont = (REXP) it2.next();
-            double[] cdata = cont.asDoubles();
-            //          LOG.info(cont.toDebugString());
-            for (double d : cdata) {
-              LOG.info(d + "\t");
+            if(cont instanceof REXPDouble) {
+              LOG.info("Double input");
+              double[] cdata = cont.asDoubles();
+              LOG.info(cont.toDebugString());
+              for (double d : cdata) {
+                LOG.info(d + "\t");
+              }
+              LOG.info("\n");
+            } else if (cont instanceof REXPInteger) {
+              LOG.info("Integer input");
+              int[] cdata = cont.asIntegers();
+              LOG.info(cont.toDebugString());
+              for (int d : cdata) {
+                LOG.info(d + "\t");
+              }
+              LOG.info("\n");
+            } else if(cont instanceof REXPLogical) {
+              LOG.info("Logical input");
+              String[] cdata = cont.asStrings();
+              LOG.info(cont.toDebugString());
+              for (String d : cdata) {
+                LOG.info(d + "\t");
+              }
+              LOG.info("\n");
+            } else if(cont instanceof REXPFactor ) {
+              LOG.info("Factor input");
+              String[] cdata = cont.asStrings();
+              LOG.info(cont.toDebugString());
+              for (String d : cdata) {
+                LOG.info(d + "\t");
+              }
+              LOG.info("\n");
+            } else if (cont instanceof REXPString) {
+              LOG.info("String input");
+              String[] cdata = cont.asStrings();
+              LOG.info(cont.toDebugString());
+              for (String d : cdata) {
+                LOG.info(d + "\t");
+              }
+              LOG.info("\n");
+            } else {
+              String msg = "Unknown type of Input: " + cont.getClass() + ". Content: " + cont.toDebugString();
+              LOG.error(msg);
+              throw new StatisticsException(msg);
             }
-            LOG.info("\n");
+
           }
         }
       }
