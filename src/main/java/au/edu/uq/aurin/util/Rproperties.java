@@ -355,7 +355,7 @@ public class Rproperties {
           }
         }
       } else {
-        String msg = "Column Names: " + content1.names.toString() + " and " + content1.names.toString() + " do not match.";
+        String msg = "Column Names: " + content1.names.toString() + " and " + content2.names.toString() + " do not match.";
         LOG.info(msg);
         return false;
       }
