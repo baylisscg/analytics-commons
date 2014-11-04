@@ -166,23 +166,7 @@ public class Rproperties {
             LOG.info(cmdata);
 
             REXP cont = (REXP) it2.next();
-            if(cont instanceof REXPDouble) {
-              LOG.info("Double input");
-              double[] cdata = cont.asDoubles();
-              LOG.info(cont.toDebugString());
-              for (double d : cdata) {
-                LOG.info(d + "\t");
-              }
-              LOG.info("\n");
-            } else if (cont instanceof REXPInteger) {
-              LOG.info("Integer input");
-              int[] cdata = cont.asIntegers();
-              LOG.info(cont.toDebugString());
-              for (int d : cdata) {
-                LOG.info(d + "\t");
-              }
-              LOG.info("\n");
-            } else if(cont instanceof REXPLogical) {
+            if(cont instanceof REXPLogical) {
               LOG.info("Logical input");
               String[] cdata = cont.asStrings();
               LOG.info(cont.toDebugString());
@@ -206,6 +190,22 @@ public class Rproperties {
                 LOG.info(d + "\t");
               }
               LOG.info("\n");
+            } else if (cont instanceof REXPInteger) {
+              LOG.info("Integer input");
+              int[] cdata = cont.asIntegers();
+              LOG.info(cont.toDebugString());
+              for (int d : cdata) {
+                LOG.info(d + "\t");
+              }
+              LOG.info("\n");
+            } else if(cont instanceof REXPDouble) {
+                LOG.info("Double input");
+                double[] cdata = cont.asDoubles();
+                LOG.info(cont.toDebugString());
+                for (double d : cdata) {
+                  LOG.info(d + "\t");
+                }
+                LOG.info("\n");
             } else {
               String msg = "Unknown type of Input: " + cont.getClass() + ". Content: " + cont.toDebugString();
               LOG.error(msg);
