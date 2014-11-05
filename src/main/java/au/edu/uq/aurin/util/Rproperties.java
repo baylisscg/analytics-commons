@@ -173,7 +173,6 @@ public class Rproperties {
               for (String d : cdata) {
                 LOG.info(d + "\t");
               }
-              LOG.info("\n");
             } else if(cont instanceof REXPFactor ) {
               LOG.info("Factor input");
               String[] cdata = cont.asStrings();
@@ -181,7 +180,6 @@ public class Rproperties {
               for (String d : cdata) {
                 LOG.info(d + "\t");
               }
-              LOG.info("\n");
             } else if (cont instanceof REXPString) {
               LOG.info("String input");
               String[] cdata = cont.asStrings();
@@ -189,7 +187,6 @@ public class Rproperties {
               for (String d : cdata) {
                 LOG.info(d + "\t");
               }
-              LOG.info("\n");
             } else if (cont instanceof REXPInteger) {
               LOG.info("Integer input");
               int[] cdata = cont.asIntegers();
@@ -197,7 +194,6 @@ public class Rproperties {
               for (int d : cdata) {
                 LOG.info(d + "\t");
               }
-              LOG.info("\n");
             } else if(cont instanceof REXPDouble) {
                 LOG.info("Double input");
                 double[] cdata = cont.asDoubles();
@@ -205,7 +201,6 @@ public class Rproperties {
                 for (double d : cdata) {
                   LOG.info(d + "\t");
                 }
-                LOG.info("\n");
             } else {
               String msg = "Unknown type of Input: " + cont.getClass() + ". Content: " + cont.toDebugString();
               LOG.error(msg);
@@ -287,40 +282,7 @@ public class Rproperties {
           if(cd1.getClass().equals(cd2.getClass())) {
             // now the class types are equal
             LOG.info("cd1 class: " + cd1.getClass() + ", cd2 class: " + cd2.getClass());
-            if(cd1 instanceof REXPDouble && cd2 instanceof REXPDouble) {
-              LOG.info("doubles");
-              double[] cd1data = ((REXPDouble) cd1).asDoubles();
-              double[] cd2data = ((REXPDouble) cd2).asDoubles();
-              
-              valid = Arrays.equals(cd1data, cd2data);
-              validMap.put(names.next().toString(), valid);
-              LOG.info("Content Equal? " + valid);
-              for (double e1 : cd1data) {
-                LOG.info(String.valueOf(e1));
-              }
-            } else if(cd1 instanceof REXPInteger && cd2 instanceof REXPInteger) {
-              LOG.info("integers");
-              int[] cd1data = ((REXPInteger) cd1).asIntegers();
-              int[] cd2data = ((REXPInteger) cd2).asIntegers();
-              
-              valid = Arrays.equals(cd1data, cd2data);
-              validMap.put(names.next().toString(), valid);
-              LOG.info("Content Equal? " + valid);
-              for (int e1 : cd1data) {
-                LOG.info(String.valueOf(e1));
-              }
-            } else if(cd1 instanceof REXPString && cd2 instanceof REXPString) {
-              LOG.info("Strings");
-              String[] cd1data = ((REXPString) cd1).asStrings();
-              String[] cd2data = ((REXPString) cd2).asStrings();
-              
-              valid = Arrays.equals(cd1data, cd2data);
-              validMap.put(names.next().toString(), valid);
-              LOG.info("Content Equal? " + valid);
-              for (String e1 : cd1data) {
-                LOG.info(e1);
-              }
-            } else if(cd1 instanceof REXPLogical && cd2 instanceof REXPLogical) {
+            if(cd1 instanceof REXPLogical && cd2 instanceof REXPLogical) {
               LOG.info("Logical");
               String[] cd1data = ((REXPLogical) cd1).asStrings();
               String[] cd2data = ((REXPLogical) cd2).asStrings();
@@ -341,6 +303,39 @@ public class Rproperties {
               LOG.info("Content Equal? " + valid);
               for (String e1 : cd1data) {
                 LOG.info(e1);
+              }
+            } else if(cd1 instanceof REXPString && cd2 instanceof REXPString) {
+              LOG.info("Strings");
+              String[] cd1data = ((REXPString) cd1).asStrings();
+              String[] cd2data = ((REXPString) cd2).asStrings();
+
+              valid = Arrays.equals(cd1data, cd2data);
+              validMap.put(names.next().toString(), valid);
+              LOG.info("Content Equal? " + valid);
+              for (String e1 : cd1data) {
+                LOG.info(e1);
+              }
+            } else if(cd1 instanceof REXPInteger && cd2 instanceof REXPInteger) {
+              LOG.info("integers");
+              int[] cd1data = ((REXPInteger) cd1).asIntegers();
+              int[] cd2data = ((REXPInteger) cd2).asIntegers();
+
+              valid = Arrays.equals(cd1data, cd2data);
+              validMap.put(names.next().toString(), valid);
+              LOG.info("Content Equal? " + valid);
+              for (int e1 : cd1data) {
+                LOG.info(String.valueOf(e1));
+              }
+            } else if(cd1 instanceof REXPDouble && cd2 instanceof REXPDouble) {
+              LOG.info("doubles");
+              double[] cd1data = ((REXPDouble) cd1).asDoubles();
+              double[] cd2data = ((REXPDouble) cd2).asDoubles();
+
+              valid = Arrays.equals(cd1data, cd2data);
+              validMap.put(names.next().toString(), valid);
+              LOG.info("Content Equal? " + valid);
+              for (double e1 : cd1data) {
+                LOG.info(String.valueOf(e1));
               }
             } else {
               validMap.put(names.next().toString(), false);
