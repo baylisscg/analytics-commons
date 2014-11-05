@@ -28,8 +28,8 @@ setupNullLogger <- function() {
 setupFileLogger <- function(optionsLogging) {
 
   lfile <- as.character(paste(optionsLogging$LOG_DIRECTORY,
-                              .Platform$file.sep, Sys.Date(),
-                              ".rlog", sep="", collpse=""))
+                              .Platform$file.sep,
+                              "rlogger.rlog", sep="", collpse=""))
   tupperLvl <- as.character(toupper(optionsLogging$LOG_LEVEL))
   numLogLevel <- as.integer(logListLevels[[tupperLvl]])
   llvl <- verbosity(numLogLevel)
