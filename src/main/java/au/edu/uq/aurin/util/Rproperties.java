@@ -206,7 +206,7 @@ public class Rproperties {
               LOG.error(msg);
               throw new StatisticsException(msg);
             }
-
+            LOG.info("----------------");
           }
         }
       }
