@@ -192,7 +192,11 @@ public class Rproperties {
               int[] cdata = cont.asIntegers();
               LOG.info(cont.toDebugString());
               for (int d : cdata) {
-                LOG.info(d + "\t");
+                if(REXPInteger.isNA(d)) {
+                  LOG.info("NA" + "\t");
+                } else {
+                  LOG.info(d + "\t");
+                }
               }
             } else if(cont instanceof REXPDouble) {
                 LOG.info("Double input");
