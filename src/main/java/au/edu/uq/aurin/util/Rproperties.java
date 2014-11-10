@@ -270,11 +270,11 @@ public class Rproperties {
 
       LOG.info("1 names = " + content1.names.toString());
       LOG.info("2 names = " + content2.names.toString());
-      LOG.info("Vector equal? " + content1.names.equals(content2.names));
+      LOG.info("Vector equal? " + content1.names.containsAll(content2.names));
 
       Iterator<?> names = content1.names.iterator();
       // check if the column names are the same
-      if(content1.names.equals(content2.names)) {
+      if(content1.names.containsAll(content2.names)) {
         // result store
         validMap = new HashMap<String, Boolean>();
         
