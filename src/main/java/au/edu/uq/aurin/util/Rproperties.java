@@ -244,7 +244,7 @@ public class Rproperties {
         LOG.info(msg);
         throw new StatisticsException(msg);
       }
-      
+
       if(df1.isList() == false || df2.isList() == false) {
         String msg = "List 1 && List 2 are Invalid lists to contain a dataFrame";
         LOG.info(msg);
@@ -277,13 +277,16 @@ public class Rproperties {
       if(content1.names.containsAll(content2.names)) {
         // result store
         validMap = new HashMap<String, Boolean>();
-        
-        Iterator<?> cont1it = content1.iterator();
-        Iterator<?> cont2it = content2.iterator();
-        while (cont1it.hasNext() && cont2it.hasNext()) {
-          Object cd1 = cont1it.next();
-          Object cd2 = cont2it.next();
-          if(cd1.getClass().equals(cd2.getClass())) {
+
+        // all names are contained in both the dataframes
+        while(names.hasNext()) {
+          String name = (String) names.next();
+          LOG.info("name = " + name);
+
+          Object cd1 = content1.at(name);
+          Object cd2 = content2.at(name);
+
+          if (cd1.getClass().equals(cd2.getClass())) {
             // now the class types are equal
             LOG.info("cd1 class: " + cd1.getClass() + ", cd2 class: " + cd2.getClass());
             if(cd1 instanceof REXPLogical && cd2 instanceof REXPLogical) {
@@ -353,10 +356,6 @@ public class Rproperties {
             return false;
           }
         }
-      } else {
-        String msg = "Column Names: " + content1.names.toString() + " and " + content2.names.toString() + " do not match.";
-        LOG.info(msg);
-        return false;
       }
     } catch (REXPMismatchException e) {
       throw new StatisticsException("Unable to parse dataFrame: " + e.getMessage());
