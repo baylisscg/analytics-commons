@@ -171,21 +171,21 @@ public class Rproperties {
               String[] cdata = cont.asStrings();
               LOG.info(cont.toDebugString());
               for (String d : cdata) {
-                LOG.info(d + "\t");
+                LOG.info(d);
               }
             } else if(cont instanceof REXPFactor ) {
               LOG.info("Factor input");
               String[] cdata = cont.asStrings();
               LOG.info(cont.toDebugString());
               for (String d : cdata) {
-                LOG.info(d + "\t");
+                LOG.info(d);
               }
             } else if (cont instanceof REXPString) {
               LOG.info("String input");
               String[] cdata = cont.asStrings();
               LOG.info(cont.toDebugString());
               for (String d : cdata) {
-                LOG.info(d + "\t");
+                LOG.info(d);
               }
             } else if (cont instanceof REXPInteger) {
               LOG.info("Integer input");
@@ -193,9 +193,9 @@ public class Rproperties {
               LOG.info(cont.toDebugString());
               for (int d : cdata) {
                 if(REXPInteger.isNA(d)) {
-                  LOG.info("NA" + "\t");
+                  LOG.info("NA, but actual Integer value is: " + String.valueOf(d));
                 } else {
-                  LOG.info(d + "\t");
+                  LOG.info(String.valueOf(d));
                 }
               }
             } else if(cont instanceof REXPDouble) {
@@ -203,7 +203,11 @@ public class Rproperties {
                 double[] cdata = cont.asDoubles();
                 LOG.info(cont.toDebugString());
                 for (double d : cdata) {
-                  LOG.info(d + "\t");
+                  if(REXPDouble.isNA(d)) {
+                    LOG.info("NA");
+                  } else {
+                    LOG.info(String.valueOf(d));
+                  }
                 }
             } else {
               String msg = "Unknown type of Input: " + cont.getClass() + ". Content: " + cont.toDebugString();
@@ -236,6 +240,9 @@ public class Rproperties {
       // get the dataframe objects
       REXP df1 = (REXP) dframe1;
       REXP df2 = (REXP) dframe2;
+
+      LOG.trace("df 1 = " + df1.toDebugString());
+      LOG.trace("df 2 = " + df2.toDebugString());
 
       LOG.info("1 dataFrame attribute valid? " + df1.hasAttribute("class"));
       LOG.info("2 dataFrame attribute valid? " + df2.hasAttribute("class"));
