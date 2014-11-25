@@ -81,6 +81,20 @@ public class RpropertiesTest {
   }
 
   @Test
+  public void testdataFrameCheck() {
+    System.out.println("DataFrame structure check");
+
+    try {
+      // 1. dummy R data for REXP population
+      REXP data1 = this.dataGenerator();
+      Rproperties.dataFrameCheck(data1);
+
+    } catch(Exception e) {
+      Assert.fail(e.getMessage());
+    }
+  }
+
+  @Test
   public void testdataFrameColumnNamesFromConnection() {
     System.out.println("Column Names check from an R connection");
 

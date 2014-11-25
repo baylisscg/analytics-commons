@@ -223,6 +223,58 @@ public class Rproperties {
     }
   }
 
+  public static void dataFrameCheck(Object dataframe) throws StatisticsException {
+
+    try {
+      // get the dataframe objects
+      REXP df1 = (REXP) dataframe;
+      if(df1 == null) {
+        String msg = "Input DataFrame: " + dataframe;
+        LOG.error(msg);
+        throw new StatisticsException(msg);
+      }
+
+      LOG.trace("df 1 = " + df1.toDebugString());
+      if(df1.isList() == false) {
+        String msg = "Invalid list to contain a dataFrame";
+        LOG.error(msg);
+        throw new StatisticsException(msg);
+      }
+
+      LOG.debug("A valid list to contain a dataFrame");
+      if(df1.hasAttribute("class") == false) {
+        String msg = "Content should have the dataframe class attribute";
+        LOG.error(msg);
+        throw new StatisticsException(msg);
+      }
+
+      // Now we can check the names of the dataFrame
+      RList content1 = df1.asList();
+      if(content1 == null || content1.isNamed() == false) {
+        String msg = "Column Names are missing in the dataframe";
+        LOG.error(msg);
+        throw new StatisticsException(msg);
+      }
+      LOG.info("dataframe column names = " + content1.names.toString());
+
+      // Now we can check the contents of the dataFrame
+      Iterator<?> names = content1.names.iterator();
+      while(names.hasNext()) {
+        String name = (String) names.next();
+        Object cd1 = content1.at(name);
+        if(cd1 instanceof REXP) {
+          LOG.debug("Column of type: " + cd1.getClass().toString());
+        } else {
+          String msg ="Unknown Column type: " + cd1.getClass().toString();
+          LOG.error(msg);
+          throw new StatisticsException(msg);
+        }
+      }
+    } catch (REXPMismatchException e) {
+      throw new StatisticsException("Unable to parse dataFrame: " + e.getMessage());
+    }
+  }
+
   /**
    * Column names of a given dataFrame
    *
