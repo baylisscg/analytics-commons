@@ -223,6 +223,12 @@ public class Rproperties {
     }
   }
 
+  /**
+   * Validation of a dataframe structure. This checks if the {@link REXP} object has
+   * the attributes: data-frame, column lists, named columns and REXP* column data types
+   * @param dataframe of {@link REXP} data frame object
+   * @throws StatisticsException invalid data frame or unable to parse input dataFrame
+   */
   public static void dataFrameCheck(Object dataframe) throws StatisticsException {
 
     try {
@@ -255,7 +261,7 @@ public class Rproperties {
         LOG.error(msg);
         throw new StatisticsException(msg);
       }
-      LOG.info("dataframe column names = " + content1.names.toString());
+      LOG.debug("dataframe column names: {}", content1.names.toString());
 
       // Now we can check the contents of the dataFrame
       Iterator<?> names = content1.names.iterator();
@@ -286,30 +292,10 @@ public class Rproperties {
     String[] columnNames = null;
     try {
       // get the dataframe objects
-      REXP df1 = (REXP) dataframe;
-      if(df1 == null) {
-        String msg = "Input DataFrame 1: " + dataframe;
-        LOG.info(msg);
-        throw new StatisticsException(msg);
-      }
-
-      LOG.info("df 1 = " + df1.toDebugString());
-//      LOG.info("dataFrame attribute valid? " + df1.hasAttribute("class"));
-
-      if(df1.isList() == false) {
-        String msg = "List 1 is an Invalid list to contain a dataFrame";
-        LOG.info(msg);
-        throw new StatisticsException(msg);
-      }
-
-      LOG.info("List 1 is a valid list to contain a dataFrame");
-      if(df1.hasAttribute("class") == false) {
-        String msg = "content should have the dataframe class attribute";
-        LOG.info(msg);
-        throw new StatisticsException(msg);
-      }
+      dataFrameCheck(dataframe);
 
       // Now we can check the names of the dataFrame
+      REXP df1 = (REXP) dataframe;
       RList content1 = df1.asList();
 
       LOG.info("dataframe column names = " + content1.names.toString());
