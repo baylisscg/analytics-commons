@@ -81,6 +81,45 @@ public class RpropertiesTest {
   }
 
   @Test
+  public void testdataFrameColumnNamesFromConnection() {
+    System.out.println("Column Names check from an R connection");
+
+    RConnection c = null;
+    try {
+      // 0. create a connection
+      c = new RConnection();
+
+      // 1. dataframe name
+      String dataFrameName = "data1";
+
+      // 2. dummy R data for REXP population
+      REXP data1 = this.dataGenerator();
+      c.assign(dataFrameName, data1);
+
+      System.out.println("dataFrameName debug string: " + data1.toDebugString());
+      System.out.println("dataFrameName Attribute type: " + data1.getAttribute("class").asString());
+
+      // 3. retrieve data1 from connection
+      REXP data1Retrieved = c.get(dataFrameName, null, true);
+      Assert.assertArrayEquals(new String[] {"iCol1", "iCol2", "dCol1", "dCol2"}, Rproperties.dataFrameColumnNames(c, dataFrameName));
+      Assert.assertArrayEquals(new String[] {"iCol1", "iCol2", "dCol1", "dCol2"}, Rproperties.dataFrameColumnNames(data1Retrieved));
+
+    } catch (RserveException e) {
+      Assert.fail("RServe: " + e.getMessage());
+    } catch (REngineException e) {
+      Assert.fail("REngine: " + e.getMessage());
+    } catch (REXPMismatchException e) {
+      Assert.fail("REXPMismatch: " + e.getMessage());
+    } catch (StatisticsException e) {
+      Assert.fail("Statistics: " + e.getMessage());
+    } finally {
+      if(c!= null) {
+        c.close();
+      }
+    }
+  }
+
+  @Test
   public void testCompute() {
     System.out.println("Null Check");
     

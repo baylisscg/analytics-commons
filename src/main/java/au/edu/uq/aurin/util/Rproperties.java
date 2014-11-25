@@ -274,6 +274,32 @@ public class Rproperties {
   }
 
   /**
+   * Extract column names from an {@link RConnection} and a dataframe name
+   *
+   * @param c A valid {@link RConnection} input
+   * @param dataFrameName A valid name of dataframe
+   * @return {@link String} array of column names
+   * @throws StatisticsException Unable to locate named dataframe or parse dataframe
+   */
+  public static String[] dataFrameColumnNames(RConnection c, String dataFrameName) throws StatisticsException {
+
+    String[] columnNames = null;
+    try {
+      if (c!= null && c.isConnected()) {
+        REXP df = c.get(dataFrameName, null, true);
+        columnNames = dataFrameColumnNames(df);
+      } else {
+        String msg = "Connection is closed or null: " + c;
+        LOG.error(msg);
+        throw new StatisticsException(msg);
+      }
+    } catch (REngineException e) {
+      throw new StatisticsException("Unable to get dataFrame: " + dataFrameName +" " + e.getMessage());
+    }
+    return columnNames;
+  }
+
+  /**
    * Compare dataframes in an {@link RConnection} for equality
    *
    * @param dframe1 {@link REXP} data frame object
