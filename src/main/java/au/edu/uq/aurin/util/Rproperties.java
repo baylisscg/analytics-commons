@@ -224,6 +224,56 @@ public class Rproperties {
   }
 
   /**
+   * Column names of a given dataFrame
+   *
+   * @param dataframe {@link REXP} object
+   * @return column names of the dataFrame
+   */
+  public static String[] dataFrameColumnNames(Object dataframe) throws StatisticsException {
+
+    String[] columnNames = null;
+    try {
+      // get the dataframe objects
+      REXP df1 = (REXP) dataframe;
+      if(df1 == null) {
+        String msg = "Input DataFrame 1: " + dataframe;
+        LOG.info(msg);
+        throw new StatisticsException(msg);
+      }
+
+      LOG.info("df 1 = " + df1.toDebugString());
+//      LOG.info("dataFrame attribute valid? " + df1.hasAttribute("class"));
+
+      if(df1.isList() == false) {
+        String msg = "List 1 is an Invalid list to contain a dataFrame";
+        LOG.info(msg);
+        throw new StatisticsException(msg);
+      }
+
+      LOG.info("List 1 is a valid list to contain a dataFrame");
+      if(df1.hasAttribute("class") == false) {
+        String msg = "content should have the dataframe class attribute";
+        LOG.info(msg);
+        throw new StatisticsException(msg);
+      }
+
+      // Now we can check the names of the dataFrame
+      RList content1 = df1.asList();
+
+      LOG.info("dataframe column names = " + content1.names.toString());
+      columnNames = (String[]) content1.names.toArray(new String[content1.names.size()]);
+      LOG.info("DataFrame Colnames:");
+      for (String e : columnNames) {
+        LOG.info(e);
+      }
+
+    } catch (REXPMismatchException e) {
+      throw new StatisticsException("Unable to parse dataFrame: " + e.getMessage());
+    }
+    return columnNames;
+  }
+
+  /**
    * Compare dataframes in an {@link RConnection} for equality
    *
    * @param dframe1 {@link REXP} data frame object
