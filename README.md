@@ -1,6 +1,6 @@
 Develop: 0.6-SNAPSHOT
 
-Stable/Master 
+Stable/Master:
 
 Release v0.5: https://github.com/AURIN/analytics-commons/tree/master
 
