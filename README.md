@@ -1,3 +1,10 @@
+Stable/Master 
+
+Release v0.5: https://github.com/AURIN/analytics-commons/tree/master
+
+* Rproperties support class
+* Rproperties introspection methods
+
 
 * Stable/Master branch Release:
 Release v0.4: https://github.com/AURIN/analytics-commons/tree/master
