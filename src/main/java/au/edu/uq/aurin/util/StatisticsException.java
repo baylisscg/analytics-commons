@@ -4,7 +4,7 @@ import au.edu.uq.aurin.interfaces.Statistics;
 
 /**
  * {@link StatisticsException} class for the {@link Statistics} Interface
- * 
+ *
  * @author irfan
  */
 public class StatisticsException extends Exception {
@@ -20,26 +20,29 @@ public class StatisticsException extends Exception {
 
   /**
    * Exception with a custom error message
+   * 
    * @param msg
    */
-  public StatisticsException(String msg) {
+  public StatisticsException(final String msg) {
     super(msg);
   }
 
   /**
    * Exception with a cause
+   * 
    * @param cause
    */
-  public StatisticsException(Throwable cause) {
+  public StatisticsException(final Throwable cause) {
     super(cause);
   }
 
   /**
    * Exception with a message and a cause
+   * 
    * @param msg
    * @param cause
    */
-  public StatisticsException(String msg, Throwable cause) {
+  public StatisticsException(final String msg, final Throwable cause) {
     super(msg, cause);
   }
 }

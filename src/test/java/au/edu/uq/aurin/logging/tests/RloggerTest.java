@@ -33,7 +33,7 @@ public class RloggerTest {
       Rlogger.logger();
       System.out.println(Rlogger.getLogOptions().toDebugString());
 
-    } catch (Exception e) {
+    } catch (final Exception e) {
       e.printStackTrace();
       Assert.fail("Test Failed: " + ExceptionUtils.getFullStackTrace(e));
     }

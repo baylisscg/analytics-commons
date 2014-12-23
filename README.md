@@ -1,4 +1,6 @@
 Develop: 0.6-SNAPSHOT
+* Apply AURIN indentation
+* Fix Sonar issues
 
 Stable/Master:
 

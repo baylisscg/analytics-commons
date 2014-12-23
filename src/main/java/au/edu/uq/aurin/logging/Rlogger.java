@@ -14,6 +14,7 @@ import au.edu.uq.aurin.util.StatisticsException;
 
 /**
  * {@link Rlogger} setup the logging infrastructure in R
+ * 
  * @author irfan
  *
  */
@@ -25,47 +26,50 @@ public final class Rlogger {
   private static String directory = null;
 
   private static final Logger LOG = LoggerFactory.getLogger(Rlogger.class);
-  
+
   private static REXP logOptions;
 
   private Rlogger() {
   }
-  
+
   /**
    * Default logging is OFF
+   * 
    * @throws StatisticsException
    */
   public static void logger() throws StatisticsException {
     // logLevel = "OFF", logDirectory = java temp directory
-    String tmpDir = System.getProperty("java.io.tmpdir");
+    final String tmpDir = System.getProperty("java.io.tmpdir");
     logger(LOGGEROFF, tmpDir);
     LOG.info("Java Temp Path = {}", tmpDir);
   }
 
   /**
    * Setup a particular logging level and a custom directory for log files
-   * @param logLevel OFF, ERROR, WARN, INFO, DEBUG
-   * @param logDirectory a writable system directory
+   * 
+   * @param logLevel
+   *          OFF, ERROR, WARN, INFO, DEBUG
+   * @param logDirectory
+   *          a writable system directory
    * @throws StatisticsException
    */
-  public static void logger(String logLevel, String logDirectory)
-      throws StatisticsException {
+  public static void logger(final String logLevel, final String logDirectory) throws StatisticsException {
     setLogLevel(logLevel);
     try {
       setLogDirectory(logDirectory);
-    } catch (IOException e) {
+    } catch (final IOException e) {
       throw new StatisticsException(e);
     }
     setupREXPLogOptions();
   }
 
   private static void setupREXPLogOptions() throws StatisticsException {
-    RList op = new RList();
+    final RList op = new RList();
     op.put("LOG_LEVEL", new REXPString(Rlogger.level));
     op.put("LOG_DIRECTORY", new REXPString(Rlogger.directory));
     try {
       setLogOptions(REXP.createDataFrame(op));
-    } catch (REXPMismatchException e) {
+    } catch (final REXPMismatchException e) {
       throw new StatisticsException(e);
     }
   }
@@ -75,15 +79,15 @@ public final class Rlogger {
     return level;
   }
 
-  private static void setLogLevel(String logLevel) {
+  private static void setLogLevel(final String logLevel) {
     if (logLevel != null) {
-      if (logLevel.isEmpty() || (logLevel.compareToIgnoreCase("OFF") == 0)) {
+      if (logLevel.isEmpty() || logLevel.compareToIgnoreCase("OFF") == 0) {
         level = LOGGEROFF;
-      } else if ((logLevel.compareToIgnoreCase("ERROR") == 0) || (logLevel.compareToIgnoreCase("WARN") == 0)) {
+      } else if (logLevel.compareToIgnoreCase("ERROR") == 0 || logLevel.compareToIgnoreCase("WARN") == 0) {
         level = logLevel.toUpperCase();
-      } else if((logLevel.compareToIgnoreCase("INFO") == 0) || (logLevel.compareToIgnoreCase("DEBUG") == 0)) {
+      } else if (logLevel.compareToIgnoreCase("INFO") == 0 || logLevel.compareToIgnoreCase("DEBUG") == 0) {
         level = logLevel.toUpperCase();
-      } else if(logLevel.compareToIgnoreCase("TRACE") == 0) {
+      } else if (logLevel.compareToIgnoreCase("TRACE") == 0) {
         level = logLevel.toUpperCase();
       } else {
         level = LOGGEROFF;
@@ -96,16 +100,14 @@ public final class Rlogger {
     return directory;
   }
 
-  private static void setLogDirectory(String logDirectory)
-      throws IOException {
+  private static void setLogDirectory(final String logDirectory) throws IOException {
 
     if (logDirectory != null) {
-      if ((!logDirectory.isEmpty()) && (new File(logDirectory).isDirectory()) && (new File(logDirectory).canWrite())) {
+      if (!logDirectory.isEmpty() && new File(logDirectory).isDirectory() && new File(logDirectory).canWrite()) {
         directory = logDirectory;
       } else {
         // null logging
-        String msg = "Log directory: " + logDirectory 
-            + ", not found. Using: " + directory + " instead.";
+        final String msg = "Log directory: " + logDirectory + ", not found. Using: " + directory + " instead.";
         LOG.info(msg);
       }
     }
@@ -115,7 +117,7 @@ public final class Rlogger {
     return logOptions;
   }
 
-  public static void setLogOptions(REXP logOptions) {
+  public static void setLogOptions(final REXP logOptions) {
     Rlogger.logOptions = logOptions;
   }
 

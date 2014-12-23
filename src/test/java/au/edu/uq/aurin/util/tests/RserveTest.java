@@ -17,8 +17,7 @@ public class RserveTest {
   public void rserveTest() {
 
     Assert.assertTrue("Cannot Shutdown Rserve, Check if there are permissions "
-        + "to shut it down if the process is owned by a different user",
-        Rserve.checkLocalRserve());
+        + "to shut it down if the process is owned by a different user", Rserve.checkLocalRserve());
 
     Assert.assertTrue("Rserve Running?", Rserve.isRserveRunning());
     RConnection c = null;
@@ -33,10 +32,9 @@ public class RserveTest {
 
       Assert.assertTrue("Cannot Shutdown Rserve, Check if Rserve.conf is has "
           + "control enabled, Check if there are permissions to shut "
-          + "it down if the process is owned by a different user",
-          Rserve.shutdownRserve());
-      
-    } catch (RserveException re) {
+          + "it down if the process is owned by a different user", Rserve.shutdownRserve());
+
+    } catch (final RserveException re) {
       Assert.fail("Test Failed: " + ExceptionUtils.getFullStackTrace(re));
     }
   }
