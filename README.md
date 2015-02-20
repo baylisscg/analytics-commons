@@ -1,11 +1,14 @@
-Develop: 0.6-SNAPSHOT
+Develop: 0.7-SNAPSHOT
+---------------------
+
+Stable/Master: Release v0.6: git tag: release_0.6
+-------------------------------------------------
 * Apply AURIN indentation
 * Fix Sonar issues
-
-Stable/Master:
+* Rserve shutdown fixes
+* REngine dependency updates for RserveAnomalyTest
 
 Release v0.5: https://github.com/AURIN/analytics-commons/tree/master
-
 * Rproperties support class
 * Rproperties introspection methods
 
