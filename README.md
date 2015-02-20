@@ -1,5 +1,7 @@
 Develop: 0.7-SNAPSHOT
 ---------------------
+* Sonar issues
+
 
 Stable/Master: Release v0.6: git tag: release_0.6
 -------------------------------------------------
