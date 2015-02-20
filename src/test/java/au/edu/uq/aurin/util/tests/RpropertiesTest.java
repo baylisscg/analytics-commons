@@ -138,9 +138,10 @@ public class RpropertiesTest {
   public void testCompute() {
     System.out.println("Null Check");
 
+    RConnection c = null;
     try {
       // 0. create a connection
-      final RConnection c = new RConnection();
+      c = new RConnection();
 
       // 1. dummy R data for REXP population
       final REXP data1 = this.dataGenerator();
@@ -180,7 +181,6 @@ public class RpropertiesTest {
       System.out.println("Retrieved Data frames of dataframe 1 and data frame 2 are identical? " + valid3);
       Assert.assertEquals(valid3, true);
 
-      c.close();
     } catch (final RserveException e) {
       Assert.fail("RServe: " + e.getMessage());
     } catch (final REngineException e) {
@@ -189,6 +189,10 @@ public class RpropertiesTest {
       Assert.fail("REXPMismatch: " + e.getMessage());
     } catch (final StatisticsException e) {
       Assert.fail("Statistics: " + e.getMessage());
+    } finally {
+      if (c != null) {
+        c.close();
+      }
     }
   }
 

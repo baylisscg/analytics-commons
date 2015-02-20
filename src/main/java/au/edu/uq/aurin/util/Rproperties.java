@@ -199,7 +199,7 @@ public class Rproperties {
               LOG.info(cont.toDebugString());
               for (final int d : cdata) {
                 if (REXPInteger.isNA(d)) {
-                  LOG.info("NA, but actual Integer value is: " + String.valueOf(d));
+                  LOG.info("NA, but actual Integer value is: {}", String.valueOf(d));
                 } else {
                   LOG.info(String.valueOf(d));
                 }

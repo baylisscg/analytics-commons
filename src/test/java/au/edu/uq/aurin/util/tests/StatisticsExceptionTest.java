@@ -33,6 +33,7 @@ public class StatisticsExceptionTest {
   @Test
   public void test1() {
 
+    System.out.println("Ignore this test as it shuts down Rserve service - Other Rserve");
     try {
       Assert.assertTrue("Cannot Shutdown Rserve, Check if there are permissions "
           + "to shut it down if the process is owned by a different user", Rserve.checkLocalRserve());
@@ -46,7 +47,8 @@ public class StatisticsExceptionTest {
       // System.out.println("worker = " + worker.asDoubleMatrix());
 
       c.close();
-      Rserve.shutdownRserve();
+      // Do not shutdown as other tests will fail in analytics-commons
+      // Rserve.shutdownRserve();
     } catch (final RserveException e) {
       Assert.fail("Rserve: " + ExceptionUtils.getFullStackTrace(new StatisticsException(e)));
     } catch (final REXPMismatchException e) {

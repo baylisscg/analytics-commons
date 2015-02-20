@@ -30,9 +30,10 @@ public class RserveTest {
 
       Assert.assertTrue("Cannot Close connection to Rserve", c.close());
 
-      Assert.assertTrue("Cannot Shutdown Rserve, Check if Rserve.conf is has "
-          + "control enabled, Check if there are permissions to shut "
-          + "it down if the process is owned by a different user", Rserve.shutdownRserve());
+      // Do not shutdown Rserve as it is needed for other tests
+      // Assert.assertTrue("Cannot Shutdown Rserve, Check if Rserve.conf is has "
+      // + "control enabled, Check if there are permissions to shut "
+      // + "it down if the process is owned by a different user", Rserve.shutdownRserve());
 
     } catch (final RserveException re) {
       Assert.fail("Test Failed: " + ExceptionUtils.getFullStackTrace(re));
