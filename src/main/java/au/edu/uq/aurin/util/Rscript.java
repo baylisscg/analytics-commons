@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Load the R analysis script file as a String
- * 
+ *
  * @author irfan
  *
  */
@@ -23,6 +23,7 @@ public class Rscript {
 
   /**
    * Loads the given R script and returns a String representation
+   * Supports both Linux/Mac and Windows line separators
    *
    * @param scriptName
    *          path and the name of R script. For example:
@@ -31,7 +32,7 @@ public class Rscript {
    * @throws StatisticsException
    *           If unable to load or parse the given scriptName
    */
-  public static String load(final String scriptName) throws StatisticsException {
+  public static final String load(final String scriptName) throws StatisticsException {
 
     String script = null;
 
@@ -41,9 +42,9 @@ public class Rscript {
       is.close();
       LOG.info("R Script Size: " + script.length() + " Bytes for " + scriptName);
     } catch (final IOException ioe) {
-      throw new StatisticsException("Unable to load R Script: " + scriptName, ioe);
+      throw new StatisticsException("Unable to load R Script: " + scriptName + ": " + ioe.getMessage());
     } catch (final PatternSyntaxException pse) {
-      throw new StatisticsException("Unable to Parse loaded R Script", pse);
+      throw new StatisticsException("Unable to Parse loaded R Script: " + pse.getMessage());
     }
 
     return script;

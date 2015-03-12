@@ -26,6 +26,9 @@ import org.slf4j.LoggerFactory;
 public class Rproperties {
 
   private static final Logger LOG = LoggerFactory.getLogger(Rproperties.class);
+  private static final String MSG = "Connection is closed or null: ";
+  private static final String PARSEERROR = "Unable to parse content: ";
+  private static final String OTHERRERROR = "Unable to connect: ";
 
   private Rproperties() {
   }
@@ -37,7 +40,7 @@ public class Rproperties {
    *          an {@link RConnection}
    * @throws StatisticsException
    */
-  public static void propertiesOfRserve(final RConnection c) throws StatisticsException {
+  public static final void propertiesOfRserve(final RConnection c) throws StatisticsException {
 
     if (c != null && c.isConnected()) {
       LOG.info("RServe version: " + c.getServerVersion());
@@ -51,9 +54,8 @@ public class Rproperties {
       LOG.info("Reference support? " + c.supportsReferences());
       LOG.info("REPL support? " + c.supportsREPL());
     } else {
-      final String msg = "Connection is closed or null: " + c;
-      LOG.error(msg);
-      throw new StatisticsException(msg);
+      LOG.error(MSG + c);
+      throw new StatisticsException(MSG + c);
     }
   }
 
@@ -64,7 +66,7 @@ public class Rproperties {
    *          an {@link RConnection}
    * @throws StatisticsException
    */
-  public static void objectsOfRSession(final RConnection c) throws StatisticsException {
+  public static final void objectsOfRSession(final RConnection c) throws StatisticsException {
 
     try {
       if (c != null && c.isConnected()) {
@@ -72,14 +74,13 @@ public class Rproperties {
         final REXP tRexp = c.parseAndEval("print(capture.output(ls()));");
         LOG.info(tRexp.toDebugString());
       } else {
-        final String msg = "Connection is closed or null: " + c;
-        LOG.error(msg);
-        throw new StatisticsException(msg);
+        LOG.error(MSG + c);
+        throw new StatisticsException(MSG + c);
       }
     } catch (final REXPMismatchException e) {
-      throw new StatisticsException("Unable to parse: " + e.getMessage());
+      throw new StatisticsException(PARSEERROR, e);
     } catch (final REngineException e) {
-      throw new StatisticsException("Unable to connect: " + e.getMessage());
+      throw new StatisticsException(OTHERRERROR, e);
     }
   }
 
@@ -90,7 +91,7 @@ public class Rproperties {
    *          an {@link RConnection}
    * @throws StatisticsException
    */
-  public static void loadedPackagesOfRSession(final RConnection c) throws StatisticsException {
+  public static final void loadedPackagesOfRSession(final RConnection c) throws StatisticsException {
 
     try {
       if (c != null && c.isConnected()) {
@@ -98,14 +99,13 @@ public class Rproperties {
         final REXP tRexp = c.parseAndEval("print(capture.output(search()));");
         LOG.info(tRexp.toDebugString());
       } else {
-        final String msg = "Connection is closed or null: " + c;
-        LOG.error(msg);
-        throw new StatisticsException(msg);
+        LOG.error(MSG + c);
+        throw new StatisticsException(MSG + c);
       }
     } catch (final REXPMismatchException e) {
-      throw new StatisticsException("Unable to parse: " + e.getMessage());
+      throw new StatisticsException(PARSEERROR, e);
     } catch (final REngineException e) {
-      throw new StatisticsException("Unable to connect: " + e.getMessage());
+      throw new StatisticsException(OTHERRERROR, e);
     }
   }
 
@@ -117,23 +117,21 @@ public class Rproperties {
    * @throws StatisticsException
    *           unable to retrieve {@link RConnection} information
    */
-  public void memoryProfileOfRSession(final RConnection c) throws StatisticsException {
+  public static final void memoryProfileOfRSession(final RConnection c) throws StatisticsException {
 
     try {
       if (c.isConnected()) {
 
-        final REXP tRexp = c.parseAndEval("print(capture.output(memory.profile()));"); // gc(TRUE);
-        // print(capture.output(memory.profile()))");
-        // tRexp = c.parseAndEval("gc(TRUE);");
-        // tRexp = c.parseAndEval("print(capture.output(ls()));");
-        // tRexp = c.parseAndEval("print(capture.output(memory.profile()));");
-        // tRexp = c.parseAndEval("print(capture.output(search()));");
+        final REXP tRexp = c.parseAndEval("print(capture.output(memory.profile()));");
         LOG.info(tRexp.toDebugString());
       } else {
-        LOG.info("Connection is closed or null: " + c);
+        LOG.error(MSG + c);
+        throw new StatisticsException(MSG + c);
       }
-    } catch (final Exception e) {
-      throw new StatisticsException("Unable to connect: " + e.getMessage());
+    } catch (final REXPMismatchException e) {
+      throw new StatisticsException(PARSEERROR, e);
+    } catch (final REngineException e) {
+      throw new StatisticsException(OTHERRERROR, e);
     }
   }
 
@@ -145,7 +143,7 @@ public class Rproperties {
    * @throws StatisticsException
    *           invalid data frame or unable to parse input dataFrame
    */
-  public static void printDataFrame(final Object dataFrame) throws StatisticsException {
+  public static final void printDataFrame(final Object dataFrame) throws StatisticsException {
 
     try {
       final REXP df = (REXP) dataFrame;
@@ -225,7 +223,7 @@ public class Rproperties {
         }
       }
     } catch (final REXPMismatchException e) {
-      throw new StatisticsException("Unable to parse dataFrame: " + e.getMessage());
+      throw new StatisticsException(PARSEERROR, e);
     }
   }
 
@@ -238,7 +236,7 @@ public class Rproperties {
    * @throws StatisticsException
    *           invalid data frame or unable to parse input dataFrame
    */
-  public static void dataFrameCheck(final Object dataframe) throws StatisticsException {
+  public static final void dataFrameCheck(final Object dataframe) throws StatisticsException {
 
     try {
       // get the dataframe objects
@@ -286,7 +284,7 @@ public class Rproperties {
         }
       }
     } catch (final REXPMismatchException e) {
-      throw new StatisticsException("Unable to parse dataFrame: " + e.getMessage());
+      throw new StatisticsException(PARSEERROR, e);
     }
   }
 
@@ -297,7 +295,7 @@ public class Rproperties {
    *          {@link REXP} object
    * @return column names of the dataFrame
    */
-  public static String[] dataFrameColumnNames(final Object dataframe) throws StatisticsException {
+  public static final String[] dataFrameColumnNames(final Object dataframe) throws StatisticsException {
 
     String[] columnNames = null;
     try {
@@ -316,7 +314,7 @@ public class Rproperties {
       }
 
     } catch (final REXPMismatchException e) {
-      throw new StatisticsException("Unable to parse dataFrame: " + e.getMessage());
+      throw new StatisticsException(PARSEERROR + " dataFrame: " + dataframe, e);
     }
     return columnNames;
   }
@@ -332,7 +330,7 @@ public class Rproperties {
    * @throws StatisticsException
    *           Unable to locate named dataframe or parse dataframe
    */
-  public static String[] dataFrameColumnNames(final RConnection c, final String dataFrameName)
+  public static final String[] dataFrameColumnNames(final RConnection c, final String dataFrameName)
       throws StatisticsException {
 
     String[] columnNames = null;
@@ -341,12 +339,11 @@ public class Rproperties {
         final REXP df = c.get(dataFrameName, null, true);
         columnNames = dataFrameColumnNames(df);
       } else {
-        final String msg = "Connection is closed or null: " + c;
-        LOG.error(msg);
-        throw new StatisticsException(msg);
+        LOG.error(MSG + c);
+        throw new StatisticsException(MSG + c);
       }
     } catch (final REngineException e) {
-      throw new StatisticsException("Unable to get dataFrame: " + dataFrameName + " " + e.getMessage());
+      throw new StatisticsException(PARSEERROR + dataFrameName, e);
     }
     return columnNames;
   }
@@ -362,9 +359,10 @@ public class Rproperties {
    * @throws StatisticsException
    *           unable to parse the input data frames
    */
-  public static boolean compare2DataFrames(final Object dframe1, final Object dframe2) throws StatisticsException {
+  public static final boolean compare2DataFrames(final Object dframe1, final Object dframe2) throws StatisticsException {
 
-    Map<String, Boolean> validMap = null;
+    // Result store
+    final Map<String, Boolean> validMap = new HashMap<String, Boolean>();
     boolean valid = false;
 
     try {
@@ -372,16 +370,17 @@ public class Rproperties {
       final REXP df1 = (REXP) dframe1;
       final REXP df2 = (REXP) dframe2;
 
-      LOG.trace("df 1 = " + df1.toDebugString());
-      LOG.trace("df 2 = " + df2.toDebugString());
-
-      LOG.info("1 dataFrame attribute valid? " + df1.hasAttribute("class"));
-      LOG.info("2 dataFrame attribute valid? " + df2.hasAttribute("class"));
       if (df1 == null || df2 == null) {
         final String msg = "Input DataFrame 1: " + dframe1 + " DataFrame 2: " + dframe2;
         LOG.info(msg);
         throw new StatisticsException(msg);
       }
+
+      LOG.trace("df 1 = " + df1.toDebugString());
+      LOG.trace("df 2 = " + df2.toDebugString());
+
+      LOG.info("1 dataFrame attribute valid? " + df1.hasAttribute("class"));
+      LOG.info("2 dataFrame attribute valid? " + df2.hasAttribute("class"));
 
       if (df1.isList() == false || df2.isList() == false) {
         final String msg = "List 1 && List 2 are Invalid lists to contain a dataFrame";
@@ -413,9 +412,6 @@ public class Rproperties {
       final Iterator<?> names = content1.names.iterator();
       // check if the column names are the same
       if (content1.names.containsAll(content2.names)) {
-        // result store
-        validMap = new HashMap<String, Boolean>();
-
         // all names are contained in both the dataframes
         while (names.hasNext()) {
           final String name = (String) names.next();
@@ -497,7 +493,7 @@ public class Rproperties {
         }
       }
     } catch (final REXPMismatchException e) {
-      throw new StatisticsException("Unable to parse dataFrame: " + e.getMessage());
+      throw new StatisticsException(PARSEERROR, e);
     }
 
     return !validMap.containsValue(false);
@@ -514,8 +510,8 @@ public class Rproperties {
    * @throws StatisticsException
    *           unable to parse the input data frames
    */
-  public static boolean compare2DataFrames(final RConnection c, final String dataFrameName1, final String dataFrameName2)
-      throws StatisticsException {
+  public static final boolean compare2DataFrames(final RConnection c, final String dataFrameName1,
+      final String dataFrameName2) throws StatisticsException {
 
     boolean result = false;
     try {
@@ -524,13 +520,12 @@ public class Rproperties {
         final REXP df2 = c.get(dataFrameName2, null, true);
         result = compare2DataFrames(df1, df2);
       } else {
-        final String msg = "Connection is closed or null: " + c;
-        LOG.error(msg);
-        throw new StatisticsException(msg);
+        LOG.error(MSG + c);
+        throw new StatisticsException(MSG + c);
       }
     } catch (final REngineException e) {
       throw new StatisticsException("Unable to get dataFrame1: " + dataFrameName1 + " and/or dataFrame2: "
-          + dataFrameName2 + " " + e.getMessage());
+          + dataFrameName2, e);
     }
     return result;
   }
@@ -550,8 +545,8 @@ public class Rproperties {
    * @throws StatisticsException
    *           unable to parse the input data frames
    */
-  public static boolean compare2DataFrames(final RConnection c1, final String dataFrameName1, final RConnection c2,
-      final String dataFrameName2) throws StatisticsException {
+  public static final boolean compare2DataFrames(final RConnection c1, final String dataFrameName1,
+      final RConnection c2, final String dataFrameName2) throws StatisticsException {
 
     boolean result = false;
 
@@ -562,21 +557,19 @@ public class Rproperties {
       if (c1 != null && c1.isConnected()) {
         df1 = c1.get(dataFrameName1, null, true);
       } else {
-        final String msg = "Connection is closed or null: " + c1;
-        LOG.error(msg);
-        throw new StatisticsException(msg);
+        LOG.error(MSG + c1);
+        throw new StatisticsException(MSG + c1);
       }
       if (c2 != null && c2.isConnected()) {
         df2 = c2.get(dataFrameName2, null, true);
       } else {
-        final String msg = "Connection is closed or null: " + c2;
-        LOG.error(msg);
-        throw new StatisticsException(msg);
+        LOG.error(MSG + c2);
+        throw new StatisticsException(MSG + c2);
       }
       result = compare2DataFrames(df1, df2);
     } catch (final REngineException e) {
       throw new StatisticsException("Unable to get dataFrame1: " + dataFrameName1 + " and/or dataFrame2: "
-          + dataFrameName2 + " " + e.getMessage());
+          + dataFrameName2, e);
     }
     return result;
   }
@@ -591,19 +584,18 @@ public class Rproperties {
    * @throws StatisticsException
    *           Unable to locate named dataframe or parse dataframe
    */
-  public static void printDataFrame(final RConnection c, final String dataFrameName) throws StatisticsException {
+  public static final void printDataFrame(final RConnection c, final String dataFrameName) throws StatisticsException {
 
     try {
       if (c != null && c.isConnected()) {
         final REXP df = c.get(dataFrameName, null, true);
         printDataFrame(df);
       } else {
-        final String msg = "Connection is closed or null: " + c;
-        LOG.error(msg);
-        throw new StatisticsException(msg);
+        LOG.error(MSG + c);
+        throw new StatisticsException(MSG + c);
       }
     } catch (final REngineException e) {
-      throw new StatisticsException("Unable to get dataFrame: " + dataFrameName + " " + e.getMessage());
+      throw new StatisticsException(PARSEERROR + dataFrameName, e);
     }
   }
 
@@ -619,7 +611,7 @@ public class Rproperties {
    * @throws StatisticsException
    *           Unable to locate named dataframes or parse dataframes
    */
-  public static void printDataFrame(final RConnection c, final String dataFrameName1, final String dataFrameName2)
+  public static final void printDataFrame(final RConnection c, final String dataFrameName1, final String dataFrameName2)
       throws StatisticsException {
 
     try {
@@ -629,13 +621,12 @@ public class Rproperties {
         printDataFrame(df1);
         printDataFrame(df2);
       } else {
-        final String msg = "Connection is closed or null: " + c;
-        LOG.error(msg);
-        throw new StatisticsException(msg);
+        LOG.error(MSG + c);
+        throw new StatisticsException(MSG + c);
       }
     } catch (final REngineException e) {
       throw new StatisticsException("Unable to get dataFrame1: " + dataFrameName1 + " and/or dataFrame2: "
-          + dataFrameName2 + " " + e.getMessage());
+          + dataFrameName2, e);
     }
   }
 
@@ -653,7 +644,7 @@ public class Rproperties {
    * @throws StatisticsException
    *           Unable to connect or locate named dataframes or parse dataframes
    */
-  public static void printDataFrame(final RConnection c1, final String dataFrameName1, final RConnection c2,
+  public static final void printDataFrame(final RConnection c1, final String dataFrameName1, final RConnection c2,
       final String dataFrameName2) throws StatisticsException {
 
     REXP df1 = null;
@@ -663,23 +654,21 @@ public class Rproperties {
       if (c1 != null && c1.isConnected()) {
         df1 = c1.get(dataFrameName1, null, true);
       } else {
-        final String msg = "Connection is closed or null: " + c1;
-        LOG.error(msg);
-        throw new StatisticsException(msg);
+        LOG.error(MSG + c1);
+        throw new StatisticsException(MSG + c1);
       }
       if (c2 != null && c2.isConnected()) {
         df2 = c2.get(dataFrameName2, null, true);
       } else {
-        final String msg = "Connection is closed or null: " + c2;
-        LOG.error(msg);
-        throw new StatisticsException(msg);
+        LOG.error(MSG + c2);
+        throw new StatisticsException(MSG + c2);
       }
 
       printDataFrame(df1);
       printDataFrame(df2);
     } catch (final REngineException e) {
       throw new StatisticsException("Unable to get dataFrame1: " + dataFrameName1 + " and/or dataFrame2: "
-          + dataFrameName2 + " " + e.getMessage());
+          + dataFrameName2, e);
     }
   }
 

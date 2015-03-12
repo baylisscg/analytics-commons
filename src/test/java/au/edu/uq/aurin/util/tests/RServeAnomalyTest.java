@@ -1,5 +1,6 @@
 package au.edu.uq.aurin.util.tests;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPDouble;
@@ -52,64 +53,70 @@ public class RServeAnomalyTest {
   }
 
   /*
+   * FIXED: upgrade Rserve/RserveEnging to 1.8.x version
+   *
    * Wrong attribute sizes for retrieved dataFrame with get() when compared to the original dataFrame
-   * 
+   *
    * Issue: 'attr2 size' of original dataframe for column names: 'nullCol02' and 'stringCol'
    * In original dataframe attr1 size is 5 and 5
    * In retrieved dataframe attr2 size is 9 and 9
    * all other columns have attribute sizes correct
    */
   @Test
-  public void test() throws Exception {
+  public void test() {
 
-    final RConnection c = new RConnection();
+    try {
+      final RConnection c = new RConnection();
 
-    // 1. generate test dataframe
-    final REXP inData = this.dataGenerator();
+      // 1. generate test dataframe
+      final REXP inData = this.dataGenerator();
 
-    // 2. data for REXP population (original dataFrame)
-    c.assign("dataF", inData);
+      // 2. data for REXP population (original dataFrame)
+      c.assign("dataF", inData);
 
-    // Original dataFrame debug
-    final RList inpDataRList = inData.asList();
-    final String[] attrNames1 = inpDataRList.keys();
-    Object attr1 = null;
-    System.out.println("Original dataFrame: ");
-    System.out.println("-----------------------");
-    for (int i = 0; i < attrNames1.length; i++) {
-      System.out.println("attrName1: " + attrNames1[i]);
-      attr1 = inpDataRList.get(i);
-      System.out.println("attr1 type: " + attr1.getClass().getName());
-      System.out.println("attr1 size: " + ((REXP) attr1).asStrings().length + "\n");
+      // Original dataFrame debug
+      final RList inpDataRList = inData.asList();
+      final String[] attrNames1 = inpDataRList.keys();
+      Object attr1 = null;
+      System.out.println("Original dataFrame: ");
+      System.out.println("-----------------------");
+      for (int i = 0; i < attrNames1.length; i++) {
+        System.out.println("attrName1: " + attrNames1[i]);
+        attr1 = inpDataRList.get(i);
+        System.out.println("attr1 type: " + attr1.getClass().getName());
+        System.out.println("attr1 size: " + ((REXP) attr1).asStrings().length + "\n");
+      }
+
+      // 3. get the assigned dataFrame (this should be the copy of the original)
+      final REXP dataFrame = c.get("dataF", null, true);
+
+      // Retrieved dataframe with get
+      final RList dataRList = dataFrame.asList();
+      final String[] attrNames2 = dataRList.keys();
+      Object attr = null;
+      System.out.println("Retrieved dataFrame: ");
+      System.out.println("-------------------------");
+      for (int i = 0; i < attrNames2.length; i++) {
+        System.out.println("attrName2: " + attrNames2[i]);
+        attr = dataRList.get(i);
+        System.out.println("attr2 type: " + attr.getClass().getName());
+        System.out.println("attr2 size: " + ((REXP) attr).asStrings().length + "\n");
+      }
+
+      // print original dataframe and retrieved dataframe for another comparison
+      System.out.println("Original dataFrame: ");
+      System.out.println("-----------------------");
+      System.out.println(inData.toDebugString());
+      Rproperties.printDataFrame(inData);
+
+      System.out.println("Retrieved dataFrame: ");
+      System.out.println("-------------------------");
+      System.out.println(dataFrame.toDebugString());
+      Rproperties.printDataFrame(dataFrame);
+
+    } catch (final Exception e) {
+      Assert.fail(e.getMessage());
     }
-
-    // 3. get the assigned dataFrame (this should be the copy of the original)
-    final REXP dataFrame = c.get("dataF", null, true);
-
-    // Retrieved dataframe with get
-    final RList dataRList = dataFrame.asList();
-    final String[] attrNames2 = dataRList.keys();
-    Object attr = null;
-    System.out.println("Retrieved dataFrame: ");
-    System.out.println("-------------------------");
-    for (int i = 0; i < attrNames2.length; i++) {
-      System.out.println("attrName2: " + attrNames2[i]);
-      attr = dataRList.get(i);
-      System.out.println("attr2 type: " + attr.getClass().getName());
-      System.out.println("attr2 size: " + ((REXP) attr).asStrings().length + "\n");
-    }
-
-    // print original dataframe and retrieved dataframe for another comparison
-    System.out.println("Original dataFrame: ");
-    System.out.println("-----------------------");
-    System.out.println(inData.toDebugString());
-    Rproperties.printDataFrame(inData);
-
-    System.out.println("Retrieved dataFrame: ");
-    System.out.println("-------------------------");
-    System.out.println(dataFrame.toDebugString());
-    Rproperties.printDataFrame(dataFrame);
-
   }
 
 }

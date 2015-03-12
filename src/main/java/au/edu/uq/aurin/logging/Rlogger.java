@@ -13,8 +13,10 @@ import org.slf4j.LoggerFactory;
 import au.edu.uq.aurin.util.StatisticsException;
 
 /**
- * {@link Rlogger} setup the logging infrastructure in R
- * 
+ * {@link Rlogger} setup the logging infrastructure in R.
+ * This is used with AURIN WORKFLOW to setup the
+ * log levels and the logging directory
+ *
  * @author irfan
  *
  */
@@ -23,7 +25,7 @@ public final class Rlogger {
   private static final String LOGGEROFF = "OFF";
 
   private static String level = LOGGEROFF;
-  private static String directory = null;
+  private static String directory;
 
   private static final Logger LOG = LoggerFactory.getLogger(Rlogger.class);
 
@@ -34,7 +36,7 @@ public final class Rlogger {
 
   /**
    * Default logging is OFF
-   * 
+   *
    * @throws StatisticsException
    */
   public static void logger() throws StatisticsException {
@@ -46,7 +48,7 @@ public final class Rlogger {
 
   /**
    * Setup a particular logging level and a custom directory for log files
-   * 
+   *
    * @param logLevel
    *          OFF, ERROR, WARN, INFO, DEBUG
    * @param logDirectory
