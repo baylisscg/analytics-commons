@@ -3,6 +3,7 @@ package au.edu.uq.aurin.util;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPDouble;
@@ -366,7 +367,7 @@ public final class Rproperties {
   public static boolean compare2DataFrames(final Object dframe1, final Object dframe2) throws StatisticsException {
 
     // Result store
-    final ConcurrentHashMap<String, Boolean> validMap = new ConcurrentHashMap<String, Boolean>();
+    final ConcurrentMap<String, Boolean> validMap = new ConcurrentHashMap<String, Boolean>();
     boolean valid = false;
 
     try {
