@@ -1,6 +1,10 @@
 Develop: 0.7-SNAPSHOT
 ---------------------
-* Sonar issues
+* Sonar fixes
+    - Rethrow exceptions
+    - Remove duplicate code
+    - finalize classes
+    - Reduce String repetition
 
 
 Stable/Master: Release v0.6: git tag: release_0.6

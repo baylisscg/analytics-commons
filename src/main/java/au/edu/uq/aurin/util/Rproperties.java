@@ -1,9 +1,9 @@
 package au.edu.uq.aurin.util;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPDouble;
@@ -23,12 +23,16 @@ import org.slf4j.LoggerFactory;
  *
  * @author irfan
  */
-public class Rproperties {
+public final class Rproperties {
 
   private static final Logger LOG = LoggerFactory.getLogger(Rproperties.class);
+
   private static final String MSG = "Connection is closed or null: ";
-  private static final String PARSEERROR = "Unable to parse content: ";
-  private static final String OTHERRERROR = "Unable to connect: ";
+  private static final String PARSE_ERROR = "Unable to parse content: ";
+  private static final String OTHER_R_ERROR = "Unable to connect: ";
+  private static final String ATTRIBUTE_TYPE = "class";
+  private static final String CONTENT_EQUAL = "Content Equal? ";
+  private static final String UNABLE_TO_GET_DATAFRAME = "Unable to get DataFrame: ";
 
   private Rproperties() {
   }
@@ -78,9 +82,9 @@ public class Rproperties {
         throw new StatisticsException(MSG + c);
       }
     } catch (final REXPMismatchException e) {
-      throw new StatisticsException(PARSEERROR, e);
+      throw new StatisticsException(PARSE_ERROR, e);
     } catch (final REngineException e) {
-      throw new StatisticsException(OTHERRERROR, e);
+      throw new StatisticsException(OTHER_R_ERROR, e);
     }
   }
 
@@ -103,9 +107,9 @@ public class Rproperties {
         throw new StatisticsException(MSG + c);
       }
     } catch (final REXPMismatchException e) {
-      throw new StatisticsException(PARSEERROR, e);
+      throw new StatisticsException(PARSE_ERROR, e);
     } catch (final REngineException e) {
-      throw new StatisticsException(OTHERRERROR, e);
+      throw new StatisticsException(OTHER_R_ERROR, e);
     }
   }
 
@@ -129,9 +133,9 @@ public class Rproperties {
         throw new StatisticsException(MSG + c);
       }
     } catch (final REXPMismatchException e) {
-      throw new StatisticsException(PARSEERROR, e);
+      throw new StatisticsException(PARSE_ERROR, e);
     } catch (final REngineException e) {
-      throw new StatisticsException(OTHERRERROR, e);
+      throw new StatisticsException(OTHER_R_ERROR, e);
     }
   }
 
@@ -146,14 +150,14 @@ public class Rproperties {
   public static final void printDataFrame(final Object dataFrame) throws StatisticsException {
 
     try {
-      final REXP df = (REXP) dataFrame;
-
-      if (df == null) {
+      if (dataFrame == null) {
         final String msg = "Input DataFrame is: " + dataFrame;
         LOG.info(msg);
         throw new StatisticsException(msg);
       } else {
         // df is not null
+        final REXP df = (REXP) dataFrame;
+
         if (df.isList() == true) {
           LOG.info("---- DataFrame ----");
           final RList content = df.asList();
@@ -223,7 +227,7 @@ public class Rproperties {
         }
       }
     } catch (final REXPMismatchException e) {
-      throw new StatisticsException(PARSEERROR, e);
+      throw new StatisticsException(PARSE_ERROR, e);
     }
   }
 
@@ -231,21 +235,22 @@ public class Rproperties {
    * Validation of a dataframe structure. This checks if the {@link REXP} object has
    * the attributes: data-frame, column lists, named columns and REXP* column data types
    *
-   * @param dataframe
+   * @param dataFrame
    *          of {@link REXP} data frame object
    * @throws StatisticsException
    *           invalid data frame or unable to parse input dataFrame
    */
-  public static final void dataFrameCheck(final Object dataframe) throws StatisticsException {
+  public static final void dataFrameCheck(final Object dataFrame) throws StatisticsException {
 
     try {
-      // get the dataframe objects
-      final REXP df1 = (REXP) dataframe;
-      if (df1 == null) {
-        final String msg = "Input DataFrame: " + dataframe;
+      if (dataFrame == null) {
+        final String msg = "Input DataFrame: " + dataFrame;
         LOG.error(msg);
         throw new StatisticsException(msg);
       }
+
+      // get the dataframe objects
+      final REXP df1 = (REXP) dataFrame;
 
       LOG.trace("df 1 = " + df1.toDebugString());
       if (df1.isList() == false) {
@@ -255,7 +260,7 @@ public class Rproperties {
       }
 
       LOG.debug("A valid list to contain a dataFrame");
-      if (df1.hasAttribute("class") == false) {
+      if (df1.hasAttribute(ATTRIBUTE_TYPE) == false) {
         final String msg = "Content should have the dataframe class attribute";
         LOG.error(msg);
         throw new StatisticsException(msg);
@@ -276,7 +281,7 @@ public class Rproperties {
         final String name = (String) names.next();
         final Object cd1 = content1.at(name);
         if (cd1 instanceof REXP) {
-          LOG.debug("Column of type: " + cd1.getClass().toString());
+          LOG.info("Column of type: " + cd1.getClass().toString());
         } else {
           final String msg = "Unknown Column type: " + cd1.getClass().toString();
           LOG.error(msg);
@@ -284,7 +289,7 @@ public class Rproperties {
         }
       }
     } catch (final REXPMismatchException e) {
-      throw new StatisticsException(PARSEERROR, e);
+      throw new StatisticsException(PARSE_ERROR, e);
     }
   }
 
@@ -314,7 +319,7 @@ public class Rproperties {
       }
 
     } catch (final REXPMismatchException e) {
-      throw new StatisticsException(PARSEERROR + " dataFrame: " + dataframe, e);
+      throw new StatisticsException(PARSE_ERROR + " dataFrame: " + dataframe, e);
     }
     return columnNames;
   }
@@ -343,7 +348,7 @@ public class Rproperties {
         throw new StatisticsException(MSG + c);
       }
     } catch (final REngineException e) {
-      throw new StatisticsException(PARSEERROR + dataFrameName, e);
+      throw new StatisticsException(PARSE_ERROR + dataFrameName, e);
     }
     return columnNames;
   }
@@ -362,7 +367,7 @@ public class Rproperties {
   public static final boolean compare2DataFrames(final Object dframe1, final Object dframe2) throws StatisticsException {
 
     // Result store
-    final Map<String, Boolean> validMap = new HashMap<String, Boolean>();
+    final Map<String, Boolean> validMap = new ConcurrentHashMap<String, Boolean>();
     boolean valid = false;
 
     try {
@@ -379,8 +384,8 @@ public class Rproperties {
       LOG.trace("df 1 = " + df1.toDebugString());
       LOG.trace("df 2 = " + df2.toDebugString());
 
-      LOG.info("1 dataFrame attribute valid? " + df1.hasAttribute("class"));
-      LOG.info("2 dataFrame attribute valid? " + df2.hasAttribute("class"));
+      LOG.info("1 dataFrame attribute valid? " + df1.hasAttribute(ATTRIBUTE_TYPE));
+      LOG.info("2 dataFrame attribute valid? " + df2.hasAttribute(ATTRIBUTE_TYPE));
 
       if (df1.isList() == false || df2.isList() == false) {
         final String msg = "List 1 && List 2 are Invalid lists to contain a dataFrame";
@@ -389,13 +394,13 @@ public class Rproperties {
       }
 
       LOG.info("List 1 && List 2 are valid lists to contain a dataFrame");
-      if (df1.hasAttribute("class") == false || df2.hasAttribute("class") == false) {
+      if (df1.hasAttribute(ATTRIBUTE_TYPE) == false || df2.hasAttribute(ATTRIBUTE_TYPE) == false) {
         final String msg = "content should have the class attribute";
         LOG.info(msg);
         throw new StatisticsException(msg);
       }
 
-      if (!df1.getAttribute("class").asString().contentEquals(df2.getAttribute("class").asString())) {
+      if (!df1.getAttribute(ATTRIBUTE_TYPE).asString().contentEquals(df2.getAttribute(ATTRIBUTE_TYPE).asString())) {
         final String msg = "The contents of the class attribute must contain the value 'data.frame'";
         LOG.info(msg);
         throw new StatisticsException(msg);
@@ -430,7 +435,7 @@ public class Rproperties {
 
               valid = Arrays.equals(cd1data, cd2data);
               validMap.put(names.next().toString(), valid);
-              LOG.info("Content Equal? " + valid);
+              LOG.info(CONTENT_EQUAL + valid);
               for (final String e1 : cd1data) {
                 LOG.info(e1);
               }
@@ -441,7 +446,7 @@ public class Rproperties {
 
               valid = Arrays.equals(cd1data, cd2data);
               validMap.put(names.next().toString(), valid);
-              LOG.info("Content Equal? " + valid);
+              LOG.info(CONTENT_EQUAL + valid);
               for (final String e1 : cd1data) {
                 LOG.info(e1);
               }
@@ -452,7 +457,7 @@ public class Rproperties {
 
               valid = Arrays.equals(cd1data, cd2data);
               validMap.put(names.next().toString(), valid);
-              LOG.info("Content Equal? " + valid);
+              LOG.info(CONTENT_EQUAL + valid);
               for (final String e1 : cd1data) {
                 LOG.info(e1);
               }
@@ -463,7 +468,7 @@ public class Rproperties {
 
               valid = Arrays.equals(cd1data, cd2data);
               validMap.put(names.next().toString(), valid);
-              LOG.info("Content Equal? " + valid);
+              LOG.info(CONTENT_EQUAL + valid);
               for (final int e1 : cd1data) {
                 LOG.info(String.valueOf(e1));
               }
@@ -474,7 +479,7 @@ public class Rproperties {
 
               valid = Arrays.equals(cd1data, cd2data);
               validMap.put(names.next().toString(), valid);
-              LOG.info("Content Equal? " + valid);
+              LOG.info(CONTENT_EQUAL + valid);
               for (final double e1 : cd1data) {
                 LOG.info(String.valueOf(e1));
               }
@@ -493,7 +498,7 @@ public class Rproperties {
         }
       }
     } catch (final REXPMismatchException e) {
-      throw new StatisticsException(PARSEERROR, e);
+      throw new StatisticsException(PARSE_ERROR, e);
     }
 
     return !validMap.containsValue(false);
@@ -502,6 +507,8 @@ public class Rproperties {
   /**
    * Compare 2 dataframes from a single {@link RConnection} for equality
    *
+   * @param c
+   *          {@link RConnection} a valid connection to R
    * @param dataFrameName1
    *          {@link String} data frame name
    * @param dataFrameName2
@@ -524,8 +531,7 @@ public class Rproperties {
         throw new StatisticsException(MSG + c);
       }
     } catch (final REngineException e) {
-      throw new StatisticsException("Unable to get dataFrame1: " + dataFrameName1 + " and/or dataFrame2: "
-          + dataFrameName2, e);
+      throw new StatisticsException(UNABLE_TO_GET_DATAFRAME + dataFrameName1 + ", " + dataFrameName2, e);
     }
     return result;
   }
@@ -568,8 +574,7 @@ public class Rproperties {
       }
       result = compare2DataFrames(df1, df2);
     } catch (final REngineException e) {
-      throw new StatisticsException("Unable to get dataFrame1: " + dataFrameName1 + " and/or dataFrame2: "
-          + dataFrameName2, e);
+      throw new StatisticsException(UNABLE_TO_GET_DATAFRAME + dataFrameName1 + ", " + dataFrameName2, e);
     }
     return result;
   }
@@ -595,7 +600,7 @@ public class Rproperties {
         throw new StatisticsException(MSG + c);
       }
     } catch (final REngineException e) {
-      throw new StatisticsException(PARSEERROR + dataFrameName, e);
+      throw new StatisticsException(PARSE_ERROR + dataFrameName, e);
     }
   }
 
@@ -625,8 +630,7 @@ public class Rproperties {
         throw new StatisticsException(MSG + c);
       }
     } catch (final REngineException e) {
-      throw new StatisticsException("Unable to get dataFrame1: " + dataFrameName1 + " and/or dataFrame2: "
-          + dataFrameName2, e);
+      throw new StatisticsException(UNABLE_TO_GET_DATAFRAME + dataFrameName1 + ", " + dataFrameName2, e);
     }
   }
 
@@ -667,8 +671,7 @@ public class Rproperties {
       printDataFrame(df1);
       printDataFrame(df2);
     } catch (final REngineException e) {
-      throw new StatisticsException("Unable to get dataFrame1: " + dataFrameName1 + " and/or dataFrame2: "
-          + dataFrameName2, e);
+      throw new StatisticsException(UNABLE_TO_GET_DATAFRAME + dataFrameName1 + ", " + dataFrameName2, e);
     }
   }
 

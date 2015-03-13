@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  * @author irfan
  *
  */
-public class Rscript {
+public final class Rscript {
 
   private static final Logger LOG = LoggerFactory.getLogger(Rscript.class);
 
@@ -42,9 +42,9 @@ public class Rscript {
       is.close();
       LOG.info("R Script Size: " + script.length() + " Bytes for " + scriptName);
     } catch (final IOException ioe) {
-      throw new StatisticsException("Unable to load R Script: " + scriptName + ": " + ioe.getMessage());
+      throw new StatisticsException("Unable to load R Script: " + scriptName, ioe);
     } catch (final PatternSyntaxException pse) {
-      throw new StatisticsException("Unable to Parse loaded R Script: " + pse.getMessage());
+      throw new StatisticsException("Unable to Parse loaded R Script: " + scriptName, pse);
     }
 
     return script;
