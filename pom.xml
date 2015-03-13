@@ -95,8 +95,13 @@
     </repository>
   </repositories>
 
-  <build>
+ <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>2.3.1</version>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -113,9 +118,15 @@
         <configuration>
           <localCheckout>true</localCheckout>
           <pushChanges>false</pushChanges>
+          <goals>install</goals>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.18.1</version>
       </plugin>
     </plugins>
   </build>
-
+  
 </project>

@@ -6,6 +6,7 @@ Develop: 0.7-SNAPSHOT
     - finalize classes
     - Reduce String repetition
 
+* Add surefire reporting to pom.xml
 
 Stable/Master: Release v0.6: git tag: release_0.6
 -------------------------------------------------
