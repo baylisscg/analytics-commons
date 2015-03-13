@@ -32,7 +32,7 @@ public final class Rscript {
    * @throws StatisticsException
    *           If unable to load or parse the given scriptName
    */
-  public static final String load(final String scriptName) throws StatisticsException {
+  public static String load(final String scriptName) throws StatisticsException {
 
     String script = null;
 

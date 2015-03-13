@@ -2,7 +2,6 @@ package au.edu.uq.aurin.util;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.rosuda.REngine.REXP;
@@ -44,7 +43,7 @@ public final class Rproperties {
    *          an {@link RConnection}
    * @throws StatisticsException
    */
-  public static final void propertiesOfRserve(final RConnection c) throws StatisticsException {
+  public static void propertiesOfRserve(final RConnection c) throws StatisticsException {
 
     if (c != null && c.isConnected()) {
       LOG.info("RServe version: " + c.getServerVersion());
@@ -70,7 +69,7 @@ public final class Rproperties {
    *          an {@link RConnection}
    * @throws StatisticsException
    */
-  public static final void objectsOfRSession(final RConnection c) throws StatisticsException {
+  public static void objectsOfRSession(final RConnection c) throws StatisticsException {
 
     try {
       if (c != null && c.isConnected()) {
@@ -95,7 +94,7 @@ public final class Rproperties {
    *          an {@link RConnection}
    * @throws StatisticsException
    */
-  public static final void loadedPackagesOfRSession(final RConnection c) throws StatisticsException {
+  public static void loadedPackagesOfRSession(final RConnection c) throws StatisticsException {
 
     try {
       if (c != null && c.isConnected()) {
@@ -121,7 +120,7 @@ public final class Rproperties {
    * @throws StatisticsException
    *           unable to retrieve {@link RConnection} information
    */
-  public static final void memoryProfileOfRSession(final RConnection c) throws StatisticsException {
+  public static void memoryProfileOfRSession(final RConnection c) throws StatisticsException {
 
     try {
       if (c.isConnected()) {
@@ -147,11 +146,11 @@ public final class Rproperties {
    * @throws StatisticsException
    *           invalid data frame or unable to parse input dataFrame
    */
-  public static final void printDataFrame(final Object dataFrame) throws StatisticsException {
+  public static void printDataFrame(final Object dataFrame) throws StatisticsException {
 
     try {
       if (dataFrame == null) {
-        final String msg = "Input DataFrame is: " + dataFrame;
+        final String msg = "Input DataFrame is NULL";
         LOG.info(msg);
         throw new StatisticsException(msg);
       } else {
@@ -240,11 +239,11 @@ public final class Rproperties {
    * @throws StatisticsException
    *           invalid data frame or unable to parse input dataFrame
    */
-  public static final void dataFrameCheck(final Object dataFrame) throws StatisticsException {
+  public static void dataFrameCheck(final Object dataFrame) throws StatisticsException {
 
     try {
       if (dataFrame == null) {
-        final String msg = "Input DataFrame: " + dataFrame;
+        final String msg = "Input DataFrame is NULL ";
         LOG.error(msg);
         throw new StatisticsException(msg);
       }
@@ -300,7 +299,7 @@ public final class Rproperties {
    *          {@link REXP} object
    * @return column names of the dataFrame
    */
-  public static final String[] dataFrameColumnNames(final Object dataframe) throws StatisticsException {
+  public static String[] dataFrameColumnNames(final Object dataframe) throws StatisticsException {
 
     String[] columnNames = null;
     try {
@@ -335,7 +334,7 @@ public final class Rproperties {
    * @throws StatisticsException
    *           Unable to locate named dataframe or parse dataframe
    */
-  public static final String[] dataFrameColumnNames(final RConnection c, final String dataFrameName)
+  public static String[] dataFrameColumnNames(final RConnection c, final String dataFrameName)
       throws StatisticsException {
 
     String[] columnNames = null;
@@ -364,10 +363,10 @@ public final class Rproperties {
    * @throws StatisticsException
    *           unable to parse the input data frames
    */
-  public static final boolean compare2DataFrames(final Object dframe1, final Object dframe2) throws StatisticsException {
+  public static boolean compare2DataFrames(final Object dframe1, final Object dframe2) throws StatisticsException {
 
     // Result store
-    final Map<String, Boolean> validMap = new ConcurrentHashMap<String, Boolean>();
+    final ConcurrentHashMap<String, Boolean> validMap = new ConcurrentHashMap<String, Boolean>();
     boolean valid = false;
 
     try {
@@ -517,8 +516,8 @@ public final class Rproperties {
    * @throws StatisticsException
    *           unable to parse the input data frames
    */
-  public static final boolean compare2DataFrames(final RConnection c, final String dataFrameName1,
-      final String dataFrameName2) throws StatisticsException {
+  public static boolean compare2DataFrames(final RConnection c, final String dataFrameName1, final String dataFrameName2)
+      throws StatisticsException {
 
     boolean result = false;
     try {
@@ -551,8 +550,8 @@ public final class Rproperties {
    * @throws StatisticsException
    *           unable to parse the input data frames
    */
-  public static final boolean compare2DataFrames(final RConnection c1, final String dataFrameName1,
-      final RConnection c2, final String dataFrameName2) throws StatisticsException {
+  public static boolean compare2DataFrames(final RConnection c1, final String dataFrameName1, final RConnection c2,
+      final String dataFrameName2) throws StatisticsException {
 
     boolean result = false;
 
@@ -589,7 +588,7 @@ public final class Rproperties {
    * @throws StatisticsException
    *           Unable to locate named dataframe or parse dataframe
    */
-  public static final void printDataFrame(final RConnection c, final String dataFrameName) throws StatisticsException {
+  public static void printDataFrame(final RConnection c, final String dataFrameName) throws StatisticsException {
 
     try {
       if (c != null && c.isConnected()) {
@@ -616,7 +615,7 @@ public final class Rproperties {
    * @throws StatisticsException
    *           Unable to locate named dataframes or parse dataframes
    */
-  public static final void printDataFrame(final RConnection c, final String dataFrameName1, final String dataFrameName2)
+  public static void printDataFrame(final RConnection c, final String dataFrameName1, final String dataFrameName2)
       throws StatisticsException {
 
     try {
@@ -648,7 +647,7 @@ public final class Rproperties {
    * @throws StatisticsException
    *           Unable to connect or locate named dataframes or parse dataframes
    */
-  public static final void printDataFrame(final RConnection c1, final String dataFrameName1, final RConnection c2,
+  public static void printDataFrame(final RConnection c1, final String dataFrameName1, final RConnection c2,
       final String dataFrameName2) throws StatisticsException {
 
     REXP df1 = null;
