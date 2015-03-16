@@ -1,3 +1,16 @@
+Analytics Commons for R
+
+Usage
+-----
+Sonar usage:
+> mvn sonar:sonar
+
+Jacoco report usage:
+> mvn jacoco:report
+
+Running unit tests:
+> mvn clean -U test
+
 Develop: 0.7-SNAPSHOT
 ---------------------
 * Sonar fixes
