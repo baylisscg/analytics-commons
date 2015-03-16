@@ -8,6 +8,7 @@ Develop: 0.7-SNAPSHOT
 
 * Surefire reporting to pom.xml
 * CI management, authors to pom
+* Jacoco coverage reporting plugin
 
 Stable/Master: Release v0.6: git tag: release_0.6
 -------------------------------------------------

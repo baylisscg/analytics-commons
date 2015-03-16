@@ -371,15 +371,15 @@ public final class Rproperties {
     boolean valid = false;
 
     try {
-      // get the dataframe objects
-      final REXP df1 = (REXP) dframe1;
-      final REXP df2 = (REXP) dframe2;
-
-      if (df1 == null || df2 == null) {
+      if (dframe1 == null || dframe2 == null) {
         final String msg = "Input DataFrame 1: " + dframe1 + " DataFrame 2: " + dframe2;
         LOG.info(msg);
         throw new StatisticsException(msg);
       }
+
+      // get the dataframe objects
+      final REXP df1 = (REXP) dframe1;
+      final REXP df2 = (REXP) dframe2;
 
       LOG.trace("df 1 = " + df1.toDebugString());
       LOG.trace("df 2 = " + df2.toDebugString());
