@@ -11,8 +11,12 @@ Jacoco report usage:
 Running unit tests:
 > mvn clean -U test
 
-Develop: 0.7-SNAPSHOT
----------------------
+Develop (branch): 0.8-SNAPSHOT
+------------------------------
+
+
+Stable/Master(branch): Release v0.7: git tag: release_0.7
+---------------------------------------------------------
 * Sonar fixes
     - Rethrow exceptions
     - Remove duplicate code
