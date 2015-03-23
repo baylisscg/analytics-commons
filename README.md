@@ -1,5 +1,7 @@
 Analytics Commons for R
 
+Dependency for statistics and spatialstats AURIN repositories
+
 Usage
 -----
 Sonar usage:
