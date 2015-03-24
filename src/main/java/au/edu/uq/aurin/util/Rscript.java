@@ -40,7 +40,7 @@ public final class Rscript {
       final InputStream is = Rscript.class.getResourceAsStream(scriptName);
       script = IOUtils.toString(is).replaceAll(System.getProperty("line.separator"), IOUtils.LINE_SEPARATOR_UNIX);
       is.close();
-      LOG.info("R Script Size: " + script.length() + " Bytes for " + scriptName);
+      LOG.debug("R Script Size: " + script.length() + " Bytes for " + scriptName);
     } catch (final IOException ioe) {
       throw new StatisticsException("Unable to load R Script: " + scriptName, ioe);
     } catch (final PatternSyntaxException pse) {

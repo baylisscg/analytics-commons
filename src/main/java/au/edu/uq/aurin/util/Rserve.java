@@ -50,10 +50,10 @@ class StreamHog extends Thread {
               s = s.substring(j + 6).trim();
             }
             installPath = s;
-            LOG.info("R InstallPath = " + s);
+            LOG.trace("R InstallPath = " + s);
           }
         } else {
-          LOG.info("Rserve>" + line);
+          LOG.trace("Rserve>" + line);
         }
       }
     } catch (final IOException e) {
@@ -68,7 +68,7 @@ class StreamHog extends Thread {
  * debugging outout of the console, so feel free to modify it for your
  * application if desired.
  * <p>
- * 
+ *
  * <i>Important:</i> All applications should shutdown every Rserve that they started! Never leave Rserve running if you
  * started it after your application quits since it may pose a security risk. Inform the user if you started an Rserve
  * instance.
@@ -110,7 +110,7 @@ public class Rserve {
         isWindows = true;
         p = Runtime.getRuntime().exec(
             "\"" + cmd + "\" -e \"library(Rserve);Rserve(" + (debug ? "TRUE" : "FALSE") + ",args='" + rsrvargs
-                + "')\" " + rargs);
+            + "')\" " + rargs);
       } else {
         /* unix startup */
         p = Runtime.getRuntime().exec(
@@ -118,9 +118,9 @@ public class Rserve {
                 "/bin/sh",
                 "-c",
                 "echo 'library(Rserve);Rserve(" + (debug ? "TRUE" : "FALSE") + ",args=\"" + rsrvargs + "\")'|" + cmd
-                    + " " + rargs, });
+                + " " + rargs, });
       }
-      LOG.info("waiting for Rserve to start ... (" + p + ")");
+      LOG.trace("waiting for Rserve to start ... (" + p + ")");
       // Fetch the output - some platforms will die if you don't ...
       final StreamHog errorHog = new StreamHog(p.getErrorStream(), false);
       final StreamHog outputHog = new StreamHog(p.getInputStream(), false);
@@ -128,9 +128,9 @@ public class Rserve {
         // on Windows the process will never return, so we cannot wait
         p.waitFor();
       }
-      LOG.info("call terminated, let us try to connect ...");
+      LOG.trace("call terminated, let us try to connect ...");
     } catch (final Exception x) {
-      LOG.info("failed to start Rserve process with ", x);
+      LOG.trace("failed to start Rserve process with ", x);
       return false;
     }
     /*
@@ -143,17 +143,17 @@ public class Rserve {
     while (attempts > 0) {
       try {
         final RConnection c = new RConnection();
-        LOG.info("Rserve is running.");
+        LOG.trace("Rserve is running.");
         c.close();
         return true;
       } catch (final Exception e2) {
-        LOG.info("Try failed with: ", e2);
+        LOG.trace("Try failed with: ", e2);
       }
       /* a safety sleep just in case the start up is delayed or asynchronous */
       try {
         Thread.sleep(5000);
       } catch (final InterruptedException ix) {
-        LOG.info(ix.getCause().getMessage());
+        LOG.trace(ix.getCause().getMessage());
       }
       attempts--;
     }
@@ -174,7 +174,7 @@ public class Rserve {
     }
     final String osname = System.getProperty("os.name");
     if (osname != null && osname.length() >= 7 && osname.substring(0, 7).equals("Windows")) {
-      LOG.info("Windows: query registry to find where R is installed ...");
+      LOG.trace("Windows: query registry to find where R is installed ...");
       String installPath = null;
       try {
         final Process rp = Runtime.getRuntime().exec("reg query HKLM\\Software\\R-core\\R");
@@ -183,11 +183,11 @@ public class Rserve {
         regHog.join();
         installPath = regHog.getInstallPath();
       } catch (final Exception rge) {
-        LOG.info("ERROR: unable to run REG to find the location of R: ", rge);
+        LOG.trace("ERROR: unable to run REG to find the location of R: ", rge);
         return false;
       }
       if (installPath == null) {
-        LOG.info("ERROR: canot find path to R. Make sure reg is available and R was installed with registry settings.");
+        LOG.trace("ERROR: canot find path to R. Make sure reg is available and R was installed with registry settings.");
         return false;
       }
       return launchRserve(installPath + "\\bin\\R.exe");
@@ -195,11 +195,11 @@ public class Rserve {
     /* try some common unix locations of R */
     return launchRserve("R") || new File("/Library/Frameworks/R.framework/Resources/bin/R").exists()
         && launchRserve("/Library/Frameworks/R.framework/Resources/bin/R")
-    || new File("/usr/local/lib/R/bin/R").exists() && launchRserve("/usr/local/lib/R/bin/R")
-    || new File("/usr/lib/R/bin/R").exists() && launchRserve("/usr/lib/R/bin/R")
-    || new File("/usr/local/bin/R").exists() && launchRserve("/usr/local/bin/R") || new File("/sw/bin/R").exists()
+        || new File("/usr/local/lib/R/bin/R").exists() && launchRserve("/usr/local/lib/R/bin/R")
+        || new File("/usr/lib/R/bin/R").exists() && launchRserve("/usr/lib/R/bin/R")
+        || new File("/usr/local/bin/R").exists() && launchRserve("/usr/local/bin/R") || new File("/sw/bin/R").exists()
         && launchRserve("/sw/bin/R") || new File("/usr/common/bin/R").exists() && launchRserve("/usr/common/bin/R")
-    || new File("/opt/bin/R").exists() && launchRserve("/opt/bin/R");
+        || new File("/opt/bin/R").exists() && launchRserve("/opt/bin/R");
   }
 
   /**
@@ -214,7 +214,7 @@ public class Rserve {
       c.close();
       return true;
     } catch (final Exception e) {
-      LOG.debug("First connect try failed with: ", e);
+      LOG.trace("First connect try failed with: ", e);
       return false;
     }
   }
@@ -230,7 +230,7 @@ public class Rserve {
       final RConnection c = new RConnection();
       c.shutdown();
     } catch (final RserveException x) {
-      LOG.debug("Rserve Already down: ", x);
+      LOG.trace("Rserve Already down: ", x);
       return true;
     }
 

@@ -47,16 +47,16 @@ public final class Rproperties {
   public static void propertiesOfRserve(final RConnection c) throws StatisticsException {
 
     if (c != null && c.isConnected()) {
-      LOG.info("RServe version: " + c.getServerVersion());
-      LOG.info("Valid R Connection: " + c.isConnected());
-      LOG.info("Login needed? " + c.needLogin());
-      LOG.info("Last Error: " + c.getLastError());
-      LOG.info("class = " + c.getClass());
-      LOG.info("---- Server support features ----");
-      LOG.info("Environment support? " + c.supportsEnvironments());
-      LOG.info("Locking? " + c.supportsLocking());
-      LOG.info("Reference support? " + c.supportsReferences());
-      LOG.info("REPL support? " + c.supportsREPL());
+      LOG.trace("RServe version: " + c.getServerVersion());
+      LOG.trace("Valid R Connection: " + c.isConnected());
+      LOG.trace("Login needed? " + c.needLogin());
+      LOG.trace("Last Error: " + c.getLastError());
+      LOG.trace("class = " + c.getClass());
+      LOG.trace("---- Server support features ----");
+      LOG.trace("Environment support? " + c.supportsEnvironments());
+      LOG.trace("Locking? " + c.supportsLocking());
+      LOG.trace("Reference support? " + c.supportsReferences());
+      LOG.trace("REPL support? " + c.supportsREPL());
     } else {
       LOG.error(MSG + c);
       throw new StatisticsException(MSG + c);
@@ -74,9 +74,9 @@ public final class Rproperties {
 
     try {
       if (c != null && c.isConnected()) {
-        LOG.info("--- connected ---");
+        LOG.trace("--- connected ---");
         final REXP tRexp = c.parseAndEval("print(capture.output(ls()));");
-        LOG.info(tRexp.toDebugString());
+        LOG.trace(tRexp.toDebugString());
       } else {
         LOG.error(MSG + c);
         throw new StatisticsException(MSG + c);
@@ -99,9 +99,9 @@ public final class Rproperties {
 
     try {
       if (c != null && c.isConnected()) {
-        LOG.info("--- connected ---");
+        LOG.trace("--- connected ---");
         final REXP tRexp = c.parseAndEval("print(capture.output(search()));");
-        LOG.info(tRexp.toDebugString());
+        LOG.trace(tRexp.toDebugString());
       } else {
         LOG.error(MSG + c);
         throw new StatisticsException(MSG + c);
@@ -127,7 +127,7 @@ public final class Rproperties {
       if (c.isConnected()) {
 
         final REXP tRexp = c.parseAndEval("print(capture.output(memory.profile()));");
-        LOG.info(tRexp.toDebugString());
+        LOG.trace(tRexp.toDebugString());
       } else {
         LOG.error(MSG + c);
         throw new StatisticsException(MSG + c);
@@ -152,69 +152,69 @@ public final class Rproperties {
     try {
       if (dataFrame == null) {
         final String msg = "Input DataFrame is NULL";
-        LOG.info(msg);
+        LOG.trace(msg);
         throw new StatisticsException(msg);
       } else {
         // df is not null
         final REXP df = (REXP) dataFrame;
 
         if (df.isList() == true) {
-          LOG.info("---- DataFrame ----");
+          LOG.trace("---- DataFrame ----");
           final RList content = df.asList();
 
           // check metadata for the list
           final Iterator<?> cmetadata = content.names.iterator();
-          LOG.info(content.names.toString());
+          LOG.trace(content.names.toString());
           // check contents within the list
           // column content
           final Iterator<?> it2 = content.iterator();
           while (it2.hasNext() || cmetadata.hasNext()) {
             // print column name first
             final String cmdata = (String) cmetadata.next();
-            LOG.info(cmdata);
+            LOG.trace(cmdata);
 
             final REXP cont = (REXP) it2.next();
             if (cont instanceof REXPLogical) {
-              LOG.info("Logical input");
+              LOG.trace("Logical input");
               final String[] cdata = cont.asStrings();
-              LOG.info(cont.toDebugString());
+              LOG.trace(cont.toDebugString());
               for (final String d : cdata) {
-                LOG.info(d);
+                LOG.trace(d);
               }
             } else if (cont instanceof REXPFactor) {
-              LOG.info("Factor input");
+              LOG.trace("Factor input");
               final String[] cdata = cont.asStrings();
-              LOG.info(cont.toDebugString());
+              LOG.trace(cont.toDebugString());
               for (final String d : cdata) {
-                LOG.info(d);
+                LOG.trace(d);
               }
             } else if (cont instanceof REXPString) {
-              LOG.info("String input");
+              LOG.trace("String input");
               final String[] cdata = cont.asStrings();
-              LOG.info(cont.toDebugString());
+              LOG.trace(cont.toDebugString());
               for (final String d : cdata) {
-                LOG.info(d);
+                LOG.trace(d);
               }
             } else if (cont instanceof REXPInteger) {
-              LOG.info("Integer input");
+              LOG.trace("Integer input");
               final int[] cdata = cont.asIntegers();
-              LOG.info(cont.toDebugString());
+              LOG.trace(cont.toDebugString());
               for (final int d : cdata) {
                 if (REXPInteger.isNA(d)) {
-                  LOG.info("NA, but actual Integer value is: {}", String.valueOf(d));
+                  LOG.trace("NA, but actual Integer value is: {}", String.valueOf(d));
                 } else {
-                  LOG.info(String.valueOf(d));
+                  LOG.trace(String.valueOf(d));
                 }
               }
             } else if (cont instanceof REXPDouble) {
-              LOG.info("Double input");
+              LOG.trace("Double input");
               final double[] cdata = cont.asDoubles();
-              LOG.info(cont.toDebugString());
+              LOG.trace(cont.toDebugString());
               for (final double d : cdata) {
                 if (REXPDouble.isNA(d)) {
-                  LOG.info("NA");
+                  LOG.trace("NA");
                 } else {
-                  LOG.info(String.valueOf(d));
+                  LOG.trace(String.valueOf(d));
                 }
               }
             } else {
@@ -222,7 +222,7 @@ public final class Rproperties {
               LOG.error(msg);
               throw new StatisticsException(msg);
             }
-            LOG.info("----------------");
+            LOG.trace("----------------");
           }
         }
       }
@@ -259,7 +259,7 @@ public final class Rproperties {
         throw new StatisticsException(msg);
       }
 
-      LOG.debug("A valid list to contain a dataFrame");
+      LOG.trace("A valid list to contain a dataFrame");
       if (df1.hasAttribute(ATTRIBUTE_TYPE) == false) {
         final String msg = "Content should have the dataframe class attribute";
         LOG.error(msg);
@@ -273,7 +273,7 @@ public final class Rproperties {
         LOG.error(msg);
         throw new StatisticsException(msg);
       }
-      LOG.debug("dataframe column names: {}", content1.names.toString());
+      LOG.trace("dataframe column names: {}", content1.names.toString());
 
       // Now we can check the contents of the dataFrame
       final Iterator<?> names = content1.names.iterator();
@@ -281,7 +281,7 @@ public final class Rproperties {
         final String name = (String) names.next();
         final Object cd1 = content1.at(name);
         if (cd1 instanceof REXP) {
-          LOG.info("Column of type: " + cd1.getClass().toString());
+          LOG.trace("Column of type: " + cd1.getClass().toString());
         } else {
           final String msg = "Unknown Column type: " + cd1.getClass().toString();
           LOG.error(msg);
@@ -311,11 +311,11 @@ public final class Rproperties {
       final REXP df1 = (REXP) dataframe;
       final RList content1 = df1.asList();
 
-      LOG.info("dataframe column names = " + content1.names.toString());
+      LOG.trace("dataframe column names = " + content1.names.toString());
       columnNames = (String[]) content1.names.toArray(new String[content1.names.size()]);
-      LOG.info("DataFrame Colnames:");
+      LOG.trace("DataFrame Colnames:");
       for (final String e : columnNames) {
-        LOG.info(e);
+        LOG.trace(e);
       }
 
     } catch (final REXPMismatchException e) {
@@ -373,7 +373,7 @@ public final class Rproperties {
     try {
       if (dframe1 == null || dframe2 == null) {
         final String msg = "Input DataFrame 1: " + dframe1 + " DataFrame 2: " + dframe2;
-        LOG.info(msg);
+        LOG.trace(msg);
         throw new StatisticsException(msg);
       }
 
@@ -384,25 +384,25 @@ public final class Rproperties {
       LOG.trace("df 1 = " + df1.toDebugString());
       LOG.trace("df 2 = " + df2.toDebugString());
 
-      LOG.info("1 dataFrame attribute valid? " + df1.hasAttribute(ATTRIBUTE_TYPE));
-      LOG.info("2 dataFrame attribute valid? " + df2.hasAttribute(ATTRIBUTE_TYPE));
+      LOG.trace("1 dataFrame attribute valid? " + df1.hasAttribute(ATTRIBUTE_TYPE));
+      LOG.trace("2 dataFrame attribute valid? " + df2.hasAttribute(ATTRIBUTE_TYPE));
 
       if (df1.isList() == false || df2.isList() == false) {
         final String msg = "List 1 && List 2 are Invalid lists to contain a dataFrame";
-        LOG.info(msg);
+        LOG.trace(msg);
         throw new StatisticsException(msg);
       }
 
-      LOG.info("List 1 && List 2 are valid lists to contain a dataFrame");
+      LOG.trace("List 1 && List 2 are valid lists to contain a dataFrame");
       if (df1.hasAttribute(ATTRIBUTE_TYPE) == false || df2.hasAttribute(ATTRIBUTE_TYPE) == false) {
         final String msg = "content should have the class attribute";
-        LOG.info(msg);
+        LOG.trace(msg);
         throw new StatisticsException(msg);
       }
 
       if (!df1.getAttribute(ATTRIBUTE_TYPE).asString().contentEquals(df2.getAttribute(ATTRIBUTE_TYPE).asString())) {
         final String msg = "The contents of the class attribute must contain the value 'data.frame'";
-        LOG.info(msg);
+        LOG.trace(msg);
         throw new StatisticsException(msg);
       }
 
@@ -410,9 +410,9 @@ public final class Rproperties {
       final RList content1 = df1.asList();
       final RList content2 = df2.asList();
 
-      LOG.info("1 names = " + content1.names.toString());
-      LOG.info("2 names = " + content2.names.toString());
-      LOG.info("Vector equal? " + content1.names.containsAll(content2.names));
+      LOG.trace("1 names = " + content1.names.toString());
+      LOG.trace("2 names = " + content2.names.toString());
+      LOG.trace("Vector equal? " + content1.names.containsAll(content2.names));
 
       final Iterator<?> names = content1.names.iterator();
       // check if the column names are the same
@@ -420,79 +420,79 @@ public final class Rproperties {
         // all names are contained in both the dataframes
         while (names.hasNext()) {
           final String name = (String) names.next();
-          LOG.info("name = " + name);
+          LOG.trace("name = " + name);
 
           final Object cd1 = content1.at(name);
           final Object cd2 = content2.at(name);
 
           if (cd1.getClass().equals(cd2.getClass())) {
             // now the class types are equal
-            LOG.info("cd1 class: " + cd1.getClass() + ", cd2 class: " + cd2.getClass());
+            LOG.trace("cd1 class: " + cd1.getClass() + ", cd2 class: " + cd2.getClass());
             if (cd1 instanceof REXPLogical && cd2 instanceof REXPLogical) {
-              LOG.info("Logical");
+              LOG.trace("Logical");
               final String[] cd1data = ((REXPLogical) cd1).asStrings();
               final String[] cd2data = ((REXPLogical) cd2).asStrings();
 
               valid = Arrays.equals(cd1data, cd2data);
               validMap.put(names.next().toString(), valid);
-              LOG.info(CONTENT_EQUAL + valid);
+              LOG.trace(CONTENT_EQUAL + valid);
               for (final String e1 : cd1data) {
-                LOG.info(e1);
+                LOG.trace(e1);
               }
             } else if (cd1 instanceof REXPFactor && cd2 instanceof REXPFactor) {
-              LOG.info("Factor");
+              LOG.trace("Factor");
               final String[] cd1data = ((REXPFactor) cd1).asStrings();
               final String[] cd2data = ((REXPFactor) cd2).asStrings();
 
               valid = Arrays.equals(cd1data, cd2data);
               validMap.put(names.next().toString(), valid);
-              LOG.info(CONTENT_EQUAL + valid);
+              LOG.trace(CONTENT_EQUAL + valid);
               for (final String e1 : cd1data) {
-                LOG.info(e1);
+                LOG.trace(e1);
               }
             } else if (cd1 instanceof REXPString && cd2 instanceof REXPString) {
-              LOG.info("Strings");
+              LOG.trace("Strings");
               final String[] cd1data = ((REXPString) cd1).asStrings();
               final String[] cd2data = ((REXPString) cd2).asStrings();
 
               valid = Arrays.equals(cd1data, cd2data);
               validMap.put(names.next().toString(), valid);
-              LOG.info(CONTENT_EQUAL + valid);
+              LOG.trace(CONTENT_EQUAL + valid);
               for (final String e1 : cd1data) {
-                LOG.info(e1);
+                LOG.trace(e1);
               }
             } else if (cd1 instanceof REXPInteger && cd2 instanceof REXPInteger) {
-              LOG.info("integers");
+              LOG.trace("integers");
               final int[] cd1data = ((REXPInteger) cd1).asIntegers();
               final int[] cd2data = ((REXPInteger) cd2).asIntegers();
 
               valid = Arrays.equals(cd1data, cd2data);
               validMap.put(names.next().toString(), valid);
-              LOG.info(CONTENT_EQUAL + valid);
+              LOG.trace(CONTENT_EQUAL + valid);
               for (final int e1 : cd1data) {
-                LOG.info(String.valueOf(e1));
+                LOG.trace(String.valueOf(e1));
               }
             } else if (cd1 instanceof REXPDouble && cd2 instanceof REXPDouble) {
-              LOG.info("doubles");
+              LOG.trace("doubles");
               final double[] cd1data = ((REXPDouble) cd1).asDoubles();
               final double[] cd2data = ((REXPDouble) cd2).asDoubles();
 
               valid = Arrays.equals(cd1data, cd2data);
               validMap.put(names.next().toString(), valid);
-              LOG.info(CONTENT_EQUAL + valid);
+              LOG.trace(CONTENT_EQUAL + valid);
               for (final double e1 : cd1data) {
-                LOG.info(String.valueOf(e1));
+                LOG.trace(String.valueOf(e1));
               }
             } else {
               validMap.put(names.next().toString(), false);
               final String msg = "Error: Unknown column content types: " + cd1.getClass() + " or " + cd2.getClass();
-              LOG.info(msg);
+              LOG.trace(msg);
               return false;
             }
           } else {
             final String msg = "Error: Got different content/class types for dataFrame 1: " + cd1.getClass()
                 + " and dataFrame 2: " + cd2.getClass();
-            LOG.info(msg);
+            LOG.trace(msg);
             return false;
           }
         }

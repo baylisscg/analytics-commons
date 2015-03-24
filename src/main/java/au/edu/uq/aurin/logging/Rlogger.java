@@ -43,7 +43,7 @@ public final class Rlogger {
     // logLevel = "OFF", logDirectory = java temp directory
     final String tmpDir = System.getProperty("java.io.tmpdir");
     logger(LOGGEROFF, tmpDir);
-    LOG.info("Java Temp Path = {}", tmpDir);
+    LOG.trace("Java Temp Path = {}", tmpDir);
   }
 
   /**
@@ -60,7 +60,7 @@ public final class Rlogger {
     try {
       setLogDirectory(logDirectory);
     } catch (final IOException e) {
-      throw new StatisticsException(e);
+      throw new StatisticsException(e.getMessage(), e);
     }
     setupREXPLogOptions();
   }
@@ -72,12 +72,12 @@ public final class Rlogger {
     try {
       setLogOptions(REXP.createDataFrame(op));
     } catch (final REXPMismatchException e) {
-      throw new StatisticsException(e);
+      throw new StatisticsException(e.getMessage(), e);
     }
   }
 
   public static String getLogLevel() {
-    LOG.info("current log level: {}", level);
+    LOG.trace("current log level: {}", level);
     return level;
   }
 
@@ -98,7 +98,7 @@ public final class Rlogger {
   }
 
   public static String getLogDirectory() {
-    LOG.info("current log directory: {}", directory);
+    LOG.trace("current log directory: {}", directory);
     return directory;
   }
 
@@ -110,7 +110,7 @@ public final class Rlogger {
       } else {
         // null logging
         final String msg = "Log directory: " + logDirectory + ", not found. Using: " + directory + " instead.";
-        LOG.info(msg);
+        LOG.trace(msg);
       }
     }
   }
