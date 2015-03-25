@@ -34,12 +34,13 @@ import au.edu.uq.aurin.util.StatisticsException;
  */
 public final class Rlogger {
 
-  private static final String LOGGEROFF = "OFF";
+  public static final String LOGGGER_OFF = "OFF";
+  public static final String LOG_DIR_NA = "";
 
-  private static String level = LOGGEROFF;
+  private static String level = LOGGGER_OFF;
   private static String directory;
 
-  private static final String TMP_LOG_DIRECTORY = System.getProperty("java.io.tmpdir");
+  public static final String TMP_LOG_DIRECTORY = System.getProperty("java.io.tmpdir");
 
   private static final Logger LOG = LoggerFactory.getLogger(Rlogger.class);
 
@@ -50,14 +51,14 @@ public final class Rlogger {
 
   /**
    * Default logging is OFF
+   * Default directory for logging is ""
    *
    * @throws StatisticsException
    */
   public static void logger() throws StatisticsException {
-    // logLevel = "OFF", logDirectory = java temp directory
-    final String tmpDir = TMP_LOG_DIRECTORY;
-    logger(LOGGEROFF, tmpDir);
-    LOG.trace("Java Temp Path: {}", tmpDir);
+
+    logger(LOGGGER_OFF, LOG_DIR_NA);
+    LOG.trace("Log Level: {}, Log Dir: {}", LOGGGER_OFF, LOG_DIR_NA);
   }
 
   /**
@@ -72,7 +73,7 @@ public final class Rlogger {
   public static void logger(final String logLevel, final String logDirectory) throws StatisticsException {
     setLogLevel(logLevel);
     try {
-      setLogDirectory(logDirectory);
+      setLogDirectory(logLevel, logDirectory);
     } catch (final IOException e) {
       throw new StatisticsException(e.getMessage(), e);
     }
@@ -103,7 +104,7 @@ public final class Rlogger {
     LOG.trace("setting log level: {}", logLevel);
 
     if (logLevel == null || logLevel.isEmpty() || logLevel.compareToIgnoreCase("OFF") == 0) {
-      level = LOGGEROFF;
+      level = LOGGGER_OFF;
     } else if (logLevel.compareToIgnoreCase("ERROR") == 0 || logLevel.compareToIgnoreCase("WARN") == 0) {
       level = logLevel.toUpperCase();
     } else if (logLevel.compareToIgnoreCase("INFO") == 0 || logLevel.compareToIgnoreCase("DEBUG") == 0) {
@@ -113,7 +114,7 @@ public final class Rlogger {
       LOG.warn("R does not support 'TRACE', defaulting to: 'DEBUG'");
       level = "DEBUG";
     } else {
-      level = LOGGEROFF;
+      level = LOGGGER_OFF;
     }
   }
 
@@ -122,7 +123,7 @@ public final class Rlogger {
     return directory;
   }
 
-  private static void setLogDirectory(final String logDirectory) throws IOException {
+  private static void setLogDirectory(final String logLevel, final String logDirectory) throws IOException {
 
     LOG.trace("got initial logDirectoy: {}", logDirectory);
     if (logDirectory != null) {
@@ -135,6 +136,11 @@ public final class Rlogger {
         final String msg = "Unable to use: " + logDirectory + ". Using: " + TMP_LOG_DIRECTORY + " instead.";
         LOG.trace("Null logging directory: {}", msg);
       }
+    }
+    // Setup empty logfile/directory if logLevel = OFF
+    if (logLevel.equalsIgnoreCase("OFF")) {
+      LOG.trace("LOGGING OFF implies no directory/file specified");
+      directory = LOG_DIR_NA;
     }
 
   }

@@ -28,6 +28,36 @@ public class RloggerTest {
   }
 
   @Test
+  public void offLogLevelDirNALogDirectoryTest() {
+
+    try {
+      // Default logging
+      Rlogger.logger("OFF", Rlogger.LOG_DIR_NA);
+      System.out.println(Rlogger.getLogOptions().toDebugString());
+
+    } catch (final Exception e) {
+      e.printStackTrace();
+      Assert.fail("Default log level and directory Failed: " + ExceptionUtils.getFullStackTrace(e));
+    }
+  }
+
+  @Test(expected = AssertionError.class)
+  public void offLogLevelTest() {
+
+    try {
+      // Default logging
+      Rlogger.logger("OFF", Rlogger.TMP_LOG_DIRECTORY);
+      Assert.assertEquals(Rlogger.getLogDirectory(), Rlogger.TMP_LOG_DIRECTORY);
+
+      System.out.println(Rlogger.getLogOptions().toDebugString());
+
+    } catch (final Exception e) {
+      e.printStackTrace();
+      Assert.fail("Default log level and directory Failed: " + ExceptionUtils.getFullStackTrace(e));
+    }
+  }
+
+  @Test
   public void correctLogLevelTest() {
 
     try {
