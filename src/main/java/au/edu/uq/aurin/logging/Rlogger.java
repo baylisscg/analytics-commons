@@ -15,7 +15,19 @@ import au.edu.uq.aurin.util.StatisticsException;
 /**
  * {@link Rlogger} setup the logging infrastructure in R.
  * This is used with AURIN WORKFLOW to setup the
- * log levels and the logging directory
+ * log levels and the logging directory.
+ *
+ * Default log level: OFF
+ * Default log directory: TMP_LOG_DIRECTORY which is set by:
+ * System.getProperty("java.io.tmpdir")
+ *
+ * Invalid log level is defaulted to OFF
+ * Invalid log directory is defaulted to TMP_LOG_DIRECTORY
+ *
+ * R supports the following log levels:
+ * OFF, ERROR, WARN, INFO, DEBUG
+ *
+ * R does not support log level: TRACE
  *
  * @author irfan
  *
@@ -26,6 +38,8 @@ public final class Rlogger {
 
   private static String level = LOGGEROFF;
   private static String directory;
+
+  private static final String TMP_LOG_DIRECTORY = System.getProperty("java.io.tmpdir");
 
   private static final Logger LOG = LoggerFactory.getLogger(Rlogger.class);
 
@@ -41,9 +55,9 @@ public final class Rlogger {
    */
   public static void logger() throws StatisticsException {
     // logLevel = "OFF", logDirectory = java temp directory
-    final String tmpDir = System.getProperty("java.io.tmpdir");
+    final String tmpDir = TMP_LOG_DIRECTORY;
     logger(LOGGEROFF, tmpDir);
-    LOG.trace("Java Temp Path = {}", tmpDir);
+    LOG.trace("Java Temp Path: {}", tmpDir);
   }
 
   /**
@@ -66,6 +80,9 @@ public final class Rlogger {
   }
 
   private static void setupREXPLogOptions() throws StatisticsException {
+    LOG.trace("final level: {}", level);
+    LOG.trace("final directory: {}", directory);
+
     final RList op = new RList();
     op.put("LOG_LEVEL", new REXPString(Rlogger.level));
     op.put("LOG_DIRECTORY", new REXPString(Rlogger.directory));
@@ -82,18 +99,21 @@ public final class Rlogger {
   }
 
   private static void setLogLevel(final String logLevel) {
-    if (logLevel != null) {
-      if (logLevel.isEmpty() || logLevel.compareToIgnoreCase("OFF") == 0) {
-        level = LOGGEROFF;
-      } else if (logLevel.compareToIgnoreCase("ERROR") == 0 || logLevel.compareToIgnoreCase("WARN") == 0) {
-        level = logLevel.toUpperCase();
-      } else if (logLevel.compareToIgnoreCase("INFO") == 0 || logLevel.compareToIgnoreCase("DEBUG") == 0) {
-        level = logLevel.toUpperCase();
-      } else if (logLevel.compareToIgnoreCase("TRACE") == 0) {
-        level = logLevel.toUpperCase();
-      } else {
-        level = LOGGEROFF;
-      }
+
+    LOG.trace("setting log level: {}", logLevel);
+
+    if (logLevel == null || logLevel.isEmpty() || logLevel.compareToIgnoreCase("OFF") == 0) {
+      level = LOGGEROFF;
+    } else if (logLevel.compareToIgnoreCase("ERROR") == 0 || logLevel.compareToIgnoreCase("WARN") == 0) {
+      level = logLevel.toUpperCase();
+    } else if (logLevel.compareToIgnoreCase("INFO") == 0 || logLevel.compareToIgnoreCase("DEBUG") == 0) {
+      level = logLevel.toUpperCase();
+    } else if (logLevel.compareToIgnoreCase("TRACE") == 0) {
+      // R does not support 'TRACE' so we default to DEBUG
+      LOG.warn("R does not support 'TRACE', defaulting to: 'DEBUG'");
+      level = "DEBUG";
+    } else {
+      level = LOGGEROFF;
     }
   }
 
@@ -104,15 +124,19 @@ public final class Rlogger {
 
   private static void setLogDirectory(final String logDirectory) throws IOException {
 
+    LOG.trace("got initial logDirectoy: {}", logDirectory);
     if (logDirectory != null) {
       if (!logDirectory.isEmpty() && new File(logDirectory).isDirectory() && new File(logDirectory).canWrite()) {
         directory = logDirectory;
+        LOG.trace("setting directory: {}", directory);
       } else {
         // null logging
-        final String msg = "Log directory: " + logDirectory + ", not found. Using: " + directory + " instead.";
-        LOG.trace(msg);
+        directory = TMP_LOG_DIRECTORY;
+        final String msg = "Unable to use: " + logDirectory + ". Using: " + TMP_LOG_DIRECTORY + " instead.";
+        LOG.trace("Null logging directory: {}", msg);
       }
     }
+
   }
 
   public static REXP getLogOptions() {
