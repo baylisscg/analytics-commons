@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>au.edu.uq.aurin</groupId>
   <artifactId>analytics-commons</artifactId>
-  <version>0.8-SNAPSHOT</version>
+  <version>0.8</version>
   <packaging>jar</packaging>
 
   <name>analytics-commons</name>
@@ -17,7 +17,7 @@
   <scm>
     <url>http://github.com/AURIN/analytics-commons</url>
     <connection>scm:git:git://github.com/AURIN/analytics-commons.git</connection>
-    <tag>release_0.7</tag>
+    <tag>release_0.8</tag>
   </scm>
 
   <developers>

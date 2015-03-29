@@ -13,8 +13,19 @@ Jacoco report usage:
 Running unit tests:
 > mvn clean -U test
 
+
 Develop (branch): 0.8-SNAPSHOT
 ------------------------------
+
+
+Stable/Master(branch): Release v0.8: git tag: release_0.8
+---------------------------------------------------------
+* Reduce logging
+* Support TRACE and OFF logging schemes
+* Unit tests to check for different logging levels and directory
+* Support for invalid log levels
+* support for invalid log directory
+* improve support for default logging 'OFF'
 
 
 Stable/Master(branch): Release v0.7: git tag: release_0.7
@@ -28,6 +39,7 @@ Stable/Master(branch): Release v0.7: git tag: release_0.7
 * Surefire reporting to pom.xml
 * CI management, authors to pom
 * Jacoco coverage reporting plugin
+
 
 Stable/Master: Release v0.6: git tag: release_0.6
 -------------------------------------------------
