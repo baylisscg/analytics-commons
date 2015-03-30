@@ -14,7 +14,7 @@ Running unit tests:
 > mvn clean -U test
 
 
-Develop (branch): 0.8-SNAPSHOT
+Develop (branch): 0.9-SNAPSHOT
 ------------------------------
 
 
