@@ -16,6 +16,12 @@ public class RWorkerError {
   private static final Logger LOG = LoggerFactory.getLogger(RWorkerError.class);
 
   /**
+   * Static Utility Class
+   */
+  private RWorkerError() {
+  }
+
+  /**
    * Checks if the worker returned a valid result
    *
    * @param worker
@@ -40,7 +46,6 @@ public class RWorkerError {
       } else if (worker.inherits("warning")) {
         errMsg = worker.asList().at("message").asString();
         LOG.warn(errMsg);
-        // throw new StatisticsException(errMsg, worker);
       } else if (worker.isString() && worker.inherits("error")) {
         errMsg = worker.asString();
         LOG.error(errMsg);
