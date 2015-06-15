@@ -7,11 +7,15 @@ import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import au.edu.uq.aurin.util.Rserve;
 import au.edu.uq.aurin.util.StatisticsException;
 
 public class StatisticsExceptionTest {
+
+  private static final Logger LOG = LoggerFactory.getLogger(StatisticsExceptionTest.class);
 
   @Test
   public void test0() {
@@ -42,9 +46,7 @@ public class StatisticsExceptionTest {
       final RConnection c = new RConnection();
       final REXP worker = c.eval("capture.output(paste(search()))");
 
-      System.out.println("worker = " + worker.asString());
-      // Uncomment line below to Test Statistics Exception
-      // System.out.println("worker = " + worker.asDoubleMatrix());
+      LOG.info("worker: {}", worker.asString());
 
       c.close();
       // Do not shutdown as other tests will fail in analytics-commons

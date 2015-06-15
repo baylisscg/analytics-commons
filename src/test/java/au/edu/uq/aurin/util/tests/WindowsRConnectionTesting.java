@@ -5,12 +5,16 @@ import org.junit.Test;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WindowsRConnectionTesting {
 
+  private static final Logger LOG = LoggerFactory.getLogger(WindowsRConnectionTesting.class);
+
   @Test
   public void test2Connections() {
-    System.out.println("2Connections: Rserve Multi-Connection Testing ---- " + getClass().getName() + " ----");
+    LOG.info("2Connections: Rserve Multi-Connection Testing ---- " + getClass().getName() + " ----");
 
     RConnection c = null;
     RConnection d = null;
@@ -26,7 +30,7 @@ public class WindowsRConnectionTesting {
 
   @Test
   public void testMoreConnections() {
-    System.out.println("More Connections: Rserve Multi-Connection Testing ---- " + getClass().getName() + " ----");
+    LOG.info("More Connections: Rserve Multi-Connection Testing ---- " + getClass().getName() + " ----");
 
     final int numRconnections = 10;
 
@@ -38,10 +42,10 @@ public class WindowsRConnectionTesting {
         cons = new RConnection();
 
         Thread.sleep(500); // 0.5 second pause after each connection creation
-        System.out.println("Server Info: " + cons.getServerVersion());
-        System.out.println("Connection num: " + ctr);
-        System.out.println("Eval result: " + cons.eval("capture.output(print(R.version.string))").asString());
-        System.out.println("Last Error: " + cons.getLastError());
+        LOG.info("Server Info: " + cons.getServerVersion());
+        LOG.info("Connection num: " + ctr);
+        LOG.info("Eval result: " + cons.eval("capture.output(print(R.version.string))").asString());
+        LOG.info("Last Error: " + cons.getLastError());
       }
     } catch (final RserveException e) {
       e.printStackTrace();
@@ -53,15 +57,15 @@ public class WindowsRConnectionTesting {
       e.printStackTrace();
       Assert.fail("RConnection Expression evaluation Failed: " + ctr + " failure: " + cons);
     } finally {
-      System.out.println("Close R Connections Array");
+      LOG.info("Close R Connections Array");
       cons.close();
-      System.out.println("Done single variable multiple new Rconnections Rserve testing");
+      LOG.info("Done single variable multiple new Rconnections Rserve testing");
     }
   }
 
   @Test
   public void connectionsArrayCreatingMoreConnections() {
-    System.out.println("More Connections: Rserve Multi-Connection Testing ---- " + getClass().getName() + " ----");
+    LOG.info("More Connections: Rserve Multi-Connection Testing ---- " + getClass().getName() + " ----");
 
     final int numRconnections = 10;
 
@@ -73,10 +77,10 @@ public class WindowsRConnectionTesting {
         consArray[ctr] = new RConnection();
 
         Thread.sleep(500); // 0.5 second pause after each connection creation
-        System.out.println("Server Info: " + consArray[ctr].getServerVersion());
-        System.out.println("Connection num: " + ctr);
-        System.out.println("Eval result: " + consArray[ctr].eval("capture.output(print(R.home()))").asString());
-        System.out.println("Last Error: " + consArray[ctr].getLastError());
+        LOG.info("Server Info: " + consArray[ctr].getServerVersion());
+        LOG.info("Connection num: " + ctr);
+        LOG.info("Eval result: " + consArray[ctr].eval("capture.output(print(R.home()))").asString());
+        LOG.info("Last Error: " + consArray[ctr].getLastError());
       }
     } catch (final RserveException e) {
       e.printStackTrace();
@@ -88,11 +92,11 @@ public class WindowsRConnectionTesting {
       e.printStackTrace();
       Assert.fail("RConnection Expression evaluation Failed: " + ctr + " failure: " + consArray[ctr]);
     } finally {
-      System.out.println("Close R Connections Array");
+      LOG.info("Close R Connections Array");
       for (final RConnection element : consArray) {
         element.close();
       }
-      System.out.println("Done Windows Multi Array-Connection Rserve testing");
+      LOG.info("Done Windows Multi Array-Connection Rserve testing");
     }
   }
 

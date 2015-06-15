@@ -5,10 +5,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import au.edu.uq.aurin.util.Rserve;
 
 public class RserveTest {
+
+  private static final Logger LOG = LoggerFactory.getLogger(RserveTest.class);
 
   /**
    * Test method to start and stop Rserve
@@ -26,7 +30,7 @@ public class RserveTest {
       // Make a connection if we successfully got Rserve running
       Assert.assertNotNull("Cannot Connect to Rserve", c = new RConnection());
 
-      System.out.println("got a connection, so closing the connection");
+      LOG.info("got a connection, so closing the connection");
 
       Assert.assertTrue("Cannot Close connection to Rserve", c.close());
 

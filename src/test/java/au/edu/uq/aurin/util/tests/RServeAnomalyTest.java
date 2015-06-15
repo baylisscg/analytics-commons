@@ -9,6 +9,8 @@ import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.REXPString;
 import org.rosuda.REngine.RList;
 import org.rosuda.REngine.Rserve.RConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import au.edu.uq.aurin.util.Rproperties;
 
@@ -16,6 +18,8 @@ import au.edu.uq.aurin.util.Rproperties;
  * @author pgreenwood, irfan
  */
 public class RServeAnomalyTest {
+
+  private static final Logger LOG = LoggerFactory.getLogger(RServeAnomalyTest.class);
 
   /*
    * Test data in a dataFrame that generates correct attribute sizes for columns:
@@ -78,13 +82,13 @@ public class RServeAnomalyTest {
       final RList inpDataRList = inData.asList();
       final String[] attrNames1 = inpDataRList.keys();
       Object attr1 = null;
-      System.out.println("Original dataFrame: ");
-      System.out.println("-----------------------");
+      LOG.info("Original dataFrame: ");
+      LOG.info("-----------------------");
       for (int i = 0; i < attrNames1.length; i++) {
-        System.out.println("attrName1: " + attrNames1[i]);
+        LOG.info("attrName1: " + attrNames1[i]);
         attr1 = inpDataRList.get(i);
-        System.out.println("attr1 type: " + attr1.getClass().getName());
-        System.out.println("attr1 size: " + ((REXP) attr1).asStrings().length + "\n");
+        LOG.info("attr1 type: " + attr1.getClass().getName());
+        LOG.info("attr1 size: " + ((REXP) attr1).asStrings().length + "\n");
       }
 
       // 3. get the assigned dataFrame (this should be the copy of the original)
@@ -94,24 +98,24 @@ public class RServeAnomalyTest {
       final RList dataRList = dataFrame.asList();
       final String[] attrNames2 = dataRList.keys();
       Object attr = null;
-      System.out.println("Retrieved dataFrame: ");
-      System.out.println("-------------------------");
+      LOG.info("Retrieved dataFrame: ");
+      LOG.info("-------------------------");
       for (int i = 0; i < attrNames2.length; i++) {
-        System.out.println("attrName2: " + attrNames2[i]);
+        LOG.info("attrName2: " + attrNames2[i]);
         attr = dataRList.get(i);
-        System.out.println("attr2 type: " + attr.getClass().getName());
-        System.out.println("attr2 size: " + ((REXP) attr).asStrings().length + "\n");
+        LOG.info("attr2 type: " + attr.getClass().getName());
+        LOG.info("attr2 size: " + ((REXP) attr).asStrings().length + "\n");
       }
 
       // print original dataframe and retrieved dataframe for another comparison
-      System.out.println("Original dataFrame: ");
-      System.out.println("-----------------------");
-      System.out.println(inData.toDebugString());
+      LOG.info("Original dataFrame: ");
+      LOG.info("-----------------------");
+      LOG.info(inData.toDebugString());
       Rproperties.printDataFrame(inData);
 
-      System.out.println("Retrieved dataFrame: ");
-      System.out.println("-------------------------");
-      System.out.println(dataFrame.toDebugString());
+      LOG.info("Retrieved dataFrame: ");
+      LOG.info("-------------------------");
+      LOG.info(dataFrame.toDebugString());
       Rproperties.printDataFrame(dataFrame);
 
     } catch (final Exception e) {

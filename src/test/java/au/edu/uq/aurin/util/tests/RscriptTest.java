@@ -10,6 +10,8 @@ import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.RList;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import au.edu.uq.aurin.logging.Rlogger;
 import au.edu.uq.aurin.util.Rscript;
@@ -17,6 +19,8 @@ import au.edu.uq.aurin.util.Rserve;
 import au.edu.uq.aurin.util.StatisticsException;
 
 public class RscriptTest {
+
+  private static final Logger LOG = LoggerFactory.getLogger(RscriptTest.class);
 
   public double[] multiplier(final double mult) {
 
@@ -50,7 +54,7 @@ public class RscriptTest {
   @Test
   public void test() {
 
-    System.out.println("Rscript Unit Test");
+    LOG.info("Rscript Unit Test");
 
     RConnection cIn = null;
     try {
@@ -62,13 +66,6 @@ public class RscriptTest {
       // 0. Load the script
       final String script = Rscript.load("/au/edu/uq/aurin/rscripts/script.r");
       Assert.assertNotNull("Unable to load given R script", script);
-
-      // System.out.println(System.getProperties().toString());
-      // ClassLoader cl = ClassLoader.getSystemClassLoader();
-      // URL[] urls = ((URLClassLoader)cl).getURLs();
-      // for(URL url: urls){
-      // System.out.println(url.getFile());
-      // }
 
       // 1. create a connection
       cIn = new RConnection();
@@ -84,12 +81,12 @@ public class RscriptTest {
       cIn.assign("optionsM", REXP.createDataFrame(optList));
 
       // 4. Logging setup
-      Rlogger.logger("DEBUG", "/tmp");
+      Rlogger.logger("DEBUG", System.getProperty("java.io.tmpdir"));
       cIn.assign("optionsLogging", Rlogger.getLogOptions());
 
       // 5. call the function defined in the script
       final REXP worker = cIn.eval("try(eval(parse(text=script)),silent=FALSE)");
-      System.out.println("worker result: " + worker.toDebugString());
+      LOG.trace("worker result: {}", worker.toDebugString());
 
       cIn.close();
     } catch (final RserveException x) {

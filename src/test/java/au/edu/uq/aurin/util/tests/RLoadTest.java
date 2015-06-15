@@ -8,10 +8,14 @@ import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.RList;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import au.edu.uq.aurin.util.Rserve;
 
 public class RLoadTest {
+
+  private static final Logger LOG = LoggerFactory.getLogger(RLoadTest.class);
 
   public double[] multiplier(final double mult) {
 
@@ -59,8 +63,7 @@ public class RLoadTest {
 
   @Test
   public void test() {
-    System.out.println("RConnection Load Testing");
-
+    LOG.info("RConnection Load Testing");
     REXP worker = null;
 
     try {
@@ -78,18 +81,16 @@ public class RLoadTest {
 
       worker = c.eval("capture.output(print(paste(object.size(dataF))))");
       // c.setSendBufferSize(104857600); // in bytes total 100MB
-      System.out.println("worker = " + worker.asString() + " in bytes");
-      System.out.println("error inherits = " + worker.inherits("try-error"));
+      LOG.info("worker SIZE: {} in bytes", worker.asString());
+      LOG.info("Worker error inherits: {}", worker.inherits("try-error"));
 
-      System.out.println("got a connection, so closing the connection");
+      LOG.info("Closing the Rconnection");
       Assert.assertTrue("Cannot Close connection to Rserve", c.close());
     } catch (final RserveException e) {
-      System.out.println("RSERVE error inherits = " + worker.inherits("try-error"));
-
+      LOG.error("RSERVE error inherits: {}", e.getMessage());
       Assert.fail(e.getMessage());
     } catch (final REXPMismatchException e) {
-      System.out.println("REXP error inherits = " + worker.inherits("try-error"));
-
+      LOG.error("Worker error inherits: {}", worker.inherits("try-error"));
       Assert.fail(e.getMessage());
     }
   }

@@ -9,11 +9,15 @@ import org.rosuda.REngine.REngineException;
 import org.rosuda.REngine.RList;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import au.edu.uq.aurin.util.Rproperties;
 import au.edu.uq.aurin.util.StatisticsException;
 
 public class RpropertiesTest {
+
+  private static final Logger LOG = LoggerFactory.getLogger(RpropertiesTest.class);
 
   public REXP dataGenerator() {
 
@@ -67,7 +71,7 @@ public class RpropertiesTest {
 
   @Test
   public void testdataFrameColumnNames() {
-    System.out.println("Column Names check");
+    LOG.info("Column Names check");
 
     try {
       // 1. dummy R data for REXP population
@@ -81,7 +85,7 @@ public class RpropertiesTest {
 
   @Test
   public void testdataFrameCheck() {
-    System.out.println("DataFrame structure check");
+    LOG.info("DataFrame structure check");
 
     try {
       // 1. dummy R data for REXP population
@@ -95,7 +99,7 @@ public class RpropertiesTest {
 
   @Test
   public void testdataFrameColumnNamesFromConnection() {
-    System.out.println("Column Names check from an R connection");
+    LOG.info("Column Names check from an R connection");
 
     RConnection c = null;
     try {
@@ -109,8 +113,8 @@ public class RpropertiesTest {
       final REXP data1 = this.dataGenerator();
       c.assign(dataFrameName, data1);
 
-      System.out.println("dataFrameName debug string: " + data1.toDebugString());
-      System.out.println("dataFrameName Attribute type: " + data1.getAttribute("class").asString());
+      LOG.info("dataFrameName debug string: {}", data1.toDebugString());
+      LOG.info("dataFrameName Attribute type: {}", data1.getAttribute("class").asString());
 
       // 3. retrieve data1 from connection
       final REXP data1Retrieved = c.get(dataFrameName, null, true);
@@ -136,7 +140,7 @@ public class RpropertiesTest {
 
   @Test
   public void testCompute() {
-    System.out.println("Null Check");
+    LOG.info("Null Check");
 
     RConnection c = null;
     try {
@@ -149,10 +153,10 @@ public class RpropertiesTest {
       final REXP data2 = this.dataGenerator();
       c.assign("data2", data2);
 
-      System.out.println("data1 debug string: " + data1.toDebugString());
-      System.out.println("data1 Attribute type: " + data1.getAttribute("class").asString());
-      System.out.println("data2 debug string: " + data2.toDebugString());
-      System.out.println("data2 Attribute type: " + data2.getAttribute("class").asString());
+      LOG.info("data1 debug string: " + data1.toDebugString());
+      LOG.info("data1 Attribute type: " + data1.getAttribute("class").asString());
+      LOG.info("data2 debug string: " + data2.toDebugString());
+      LOG.info("data2 Attribute type: " + data2.getAttribute("class").asString());
 
       // debug information about the input connection
       Rproperties.propertiesOfRserve(c);
@@ -165,7 +169,7 @@ public class RpropertiesTest {
       Rproperties.printDataFrame(data1Retrieved); // updated
 
       final boolean valid1 = Rproperties.compare2DataFrames(data1, data1Retrieved);
-      System.out.println("Data frame1 original and retrieved are identical? " + valid1);
+      LOG.info("Data frame1 original and retrieved are identical? " + valid1);
       Assert.assertEquals(valid1, true);
 
       // Retrieve data 2 from connection
@@ -174,11 +178,11 @@ public class RpropertiesTest {
       Rproperties.printDataFrame(data2Retrieved); // updated
 
       final boolean valid2 = Rproperties.compare2DataFrames(data1, data1Retrieved);
-      System.out.println("Data frame2 original and retrieved are identical? " + valid2);
+      LOG.info("Data frame2 original and retrieved are identical? " + valid2);
       Assert.assertEquals(valid2, true);
 
       final boolean valid3 = Rproperties.compare2DataFrames(data1Retrieved, data2Retrieved);
-      System.out.println("Retrieved Data frames of dataframe 1 and data frame 2 are identical? " + valid3);
+      LOG.info("Retrieved Data frames of dataframe 1 and data frame 2 are identical? " + valid3);
       Assert.assertEquals(valid3, true);
 
     } catch (final RserveException e) {
