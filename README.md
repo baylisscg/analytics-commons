@@ -14,8 +14,17 @@ Running unit tests:
 > mvn clean -U test
 
 
-Develop (branch): 0.9-SNAPSHOT
+Develop (branch): 1.0-SNAPSHOT
 ------------------------------
+
+
+Stable/Master(branch): Release v0.9: git tag: release_0.9
+---------------------------------------------------------
+* Use logger instead of Sys.out.print in Tests
+* Java Temp directory usage to be OS agnostic
+* Common Error check method reducing duplication
+* Documetation update for error check
+* Unit test updates
 
 
 Stable/Master(branch): Release v0.8: git tag: release_0.8
