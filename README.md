@@ -25,7 +25,7 @@ Stable/Master(branch): Release v0.9: git tag: release_0.9
 
 Develop (branch): 1.0-SNAPSHOT
 ------------------------------
-Future updates to go here
+Develop version bump
 
 
 Stable/Master(branch): Release v0.8: git tag: release_0.8
