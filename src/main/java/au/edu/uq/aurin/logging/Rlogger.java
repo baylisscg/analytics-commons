@@ -145,10 +145,21 @@ public final class Rlogger {
 
   }
 
+  /**
+   * Get the current logging options for R
+   *
+   * @return {@link REXP} logOptions
+   */
   public static REXP getLogOptions() {
     return logOptions;
   }
 
+  /**
+   * Setup the logging options for R
+   *
+   * @param logOptions
+   *          {@link REXP} R logger options
+   */
   public static void setLogOptions(final REXP logOptions) {
     Rlogger.logOptions = logOptions;
   }
