@@ -16,9 +16,10 @@ Running unit tests:
 
 Stable/Master(branch): Release v1.0: git tag: release_1.0
 ---------------------------------------------------------
-* Java doc updates
+* Java doc updates final release
 
-Develop (branch): 1.0-SNAPSHOT
+
+Develop (branch): 1.1-SNAPSHOT
 ------------------------------
 Develop version bump
 
