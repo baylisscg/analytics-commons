@@ -14,6 +14,16 @@ Running unit tests:
 > mvn clean -U test
 
 
+Stable/Master(branch): Release v1.0: git tag: release_1.0
+---------------------------------------------------------
+* Java doc updates
+
+Develop (branch): 1.0-SNAPSHOT
+------------------------------
+Develop version bump
+
+
+
 Stable/Master(branch): Release v0.9: git tag: release_0.9
 ---------------------------------------------------------
 * Use logger instead of Sys.out.print in Tests
@@ -21,12 +31,6 @@ Stable/Master(branch): Release v0.9: git tag: release_0.9
 * Common Error check method reducing duplication
 * Documetation update for error check
 * Unit test updates
-
-
-Develop (branch): 1.0-SNAPSHOT
-------------------------------
-Develop version bump
-
 
 Stable/Master(branch): Release v0.8: git tag: release_0.8
 ---------------------------------------------------------
