@@ -2,6 +2,8 @@ Analytics Commons for R
 
 Dependency for statistics and spatialstats AURIN repositories
 
+Provides Rserve connectivity for the analytical tools
+
 Usage
 -----
 Sonar usage:
