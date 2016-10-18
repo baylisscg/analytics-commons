@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>au.edu.uq.aurin</groupId>
   <artifactId>analytics-commons</artifactId>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.1</version>
   <packaging>jar</packaging>
 
   <name>analytics-commons</name>
@@ -29,6 +28,9 @@
       <roles>
         <role>Integration Architect</role>
       </roles>
+    </developer>
+    <developer>
+      <name>Philip Greenwood</name>
     </developer>
   </developers>
 
@@ -104,7 +106,7 @@
         <version>2.18.1</version>
       </plugin>
       <!-- Coverage reporting: mvn jacoco:report -->
-      <plugin>
+<!--       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>0.7.4.201502262128</version>
@@ -123,7 +125,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
+      </plugin> -->
     </plugins>
   </build>
 
