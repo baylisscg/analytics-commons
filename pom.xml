@@ -1,8 +1,13 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="utf-8" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>au.edu.uq.aurin</groupId>
   <artifactId>analytics-commons</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <version>${revision}${sha1}${changelist}</version>
+
   <packaging>jar</packaging>
 
   <name>analytics-commons</name>
@@ -41,6 +46,9 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <revision>1.2.0</revision>
+    <sha1/>
+    <changelist/>
   </properties>
 
   <distributionManagement>
@@ -79,21 +87,24 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-install-plugin</artifactId>
-        <version>2.3.1</version>
+        <version>2.4</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
+        <version>3.8.1</version>
         <configuration>
           <source>1.7</source>
           <target>1.7</target>
+          <compilerArgs combine.children="append">
+            <arg>-Xlint:all</arg>
+          </compilerArgs>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
-        <version>2.3.2</version>
+        <version>2.5.3</version>
         <configuration>
           <localCheckout>true</localCheckout>
           <pushChanges>false</pushChanges>
@@ -102,32 +113,273 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.18.1</version>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.1.2</version>
       </plugin>
-      <!-- Coverage reporting: mvn jacoco:report -->
-<!--       <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.7.4.201502262128</version>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>3.0.0-M3</version>
+        <configuration>
+          <systemProperties>
+            <aurin.dir>${project.basedir}/src/test/resources</aurin.dir>
+          </systemProperties>
+          <includes>
+            <include>**/*IT.java</include>
+            <include>**/*ITest.java</include>
+            <include>**/*IntegrationTest.java</include>
+          </includes>
+        </configuration>
         <executions>
           <execution>
-            <id>default-prepare-agent</id>
+            <phase>integration-test</phase>
             <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>default-report</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>report</goal>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
             </goals>
           </execution>
         </executions>
-      </plugin> -->
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0-M3</version>
+        <configuration>
+          <systemProperties>
+            <aurin.dir>${project.basedir}/src/test/resources</aurin.dir>
+          </systemProperties>
+          <excludes>
+            <exclude>**/*IT.java</exclude>
+            <exclude>**/*ITest.java</exclude>
+            <exclude>**/*IntegrationTest.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>0.30.0</version>
+        <configuration>
+          <skip>${skipITs}</skip>
+          <images>
+            <image>
+              <name>repo.eresearch.unimelb.edu.au:8000/aurin/rserve@sha256:cba7ba37dbc5025aef1d24510359fffdeb14fadb834924920b3c5f8bc2356a58</name>
+              <alias>it-serve</alias>
+              <run>
+                <ports>
+                  <port>6311:6311</port> <!-- Must use 6311 for published port for now -->
+                </ports>
+                <wait>
+                  <log>Rserve started in non-daemon mode.</log>
+                  <time>60000</time>
+                </wait>
+                <volumes>
+                  <bind>
+                    <volume>
+                      ${project.build.testOutputDirectory}:${project.build.testOutputDirectory}
+                    </volume>
+                  </bind>
+                </volumes>
+              </run>
+            </image>
+          </images>
+        </configuration>
+        <executions>
+          <execution>
+            <id>prepare-it-rserve</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>start</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>remove-it-rserve</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.3</version>
+        <executions>
+          <execution>
+            <id>pre-unit-test</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <configuration>
+              <includes>
+                <include>au.org.aurin.*</include>
+              </includes>
+            </configuration>
+          </execution>
+          <execution>
+            <id>post-unit-test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <includes>
+                <include>au.org.aurin.*</include>
+              </includes>
+            </configuration>
+          </execution>
+          <execution>
+            <id>pre-integration-test</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <configuration>
+              <includes>
+                <include>au.org.aurin.*</include>
+              </includes>
+              <excludes>
+                <exclude>**/*Exception.*</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+          <execution>
+            <id>post-integration-test</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <includes>
+                <include>au.org.aurin.*</include>
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>flatten-maven-plugin</artifactId>
+        <version>1.1.0</version>
+        <configuration>
+          <updatePomFile>true</updatePomFile>
+          <flattenMode>resolveCiFriendliesOnly</flattenMode>
+        </configuration>
+        <executions>
+          <execution>
+            <id>flatten</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>flatten</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>flatten.clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0-M2</version>
+        <executions>
+          <execution>
+            <id>enforce-versions</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <bannedPlugins>
+                  <!-- will only display a warning but does not fail the build. -->
+                  <level>WARN</level>
+                  <excludes>
+                    <exclude>org.apache.maven.plugins:maven-verifier-plugin</exclude>
+                  </excludes>
+                  <message>Please consider using the maven-invoker-plugin
+                    (http://maven.apache.org/plugins/maven-invoker-plugin/)!
+                  </message>
+                </bannedPlugins>
+              </rules>
+            </configuration>
+          </execution>
+          <execution>
+            <id>enforce-no-snapshots</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <reactorModuleConvergence>
+                  <message>The reactor is not valid</message>
+                </reactorModuleConvergence>
+              </rules>
+              <fail>true</fail>
+            </configuration>
+          </execution>
+          <execution>
+            <id>enforce-dependency-convergence</id>
+            <configuration>
+              <fail>false</fail>
+              <rules>
+                <dependencyConvergence/>
+              </rules>
+            </configuration>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>no-duplicate-declared-dependencies</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <banDuplicatePomDependencyVersions/>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-toolchains-plugin</artifactId>
+        <version>1.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>toolchain</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <toolchains>
+            <jdk>
+              <version>1.7</version>
+            </jdk>
+          </toolchains>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-bom</artifactId>
+        <version>2.11.2</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <dependency>
@@ -163,14 +415,38 @@
     <!-- Logging -->
     <dependency>
       <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.2</version>
-      <scope>test</scope>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.25</version>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.7.2</version>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-1.2-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j-impl</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-jul</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.9.9</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.9.9</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+      <version>2.9.9</version>
+      <scope>runtime</scope>
     </dependency>
   </dependencies>
 
