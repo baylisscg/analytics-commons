@@ -8,3 +8,4 @@ target/
 .Rbuildignore
 .Rproj.user/
 .Rproj.user
+.flattened-pom.xml
