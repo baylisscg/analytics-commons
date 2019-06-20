@@ -8,6 +8,7 @@ steps:
       docker: "true"
     command:
       - 'mvn -Pjdk7 -Dchangelist="-${BUILDKITE_BUILD_NUMBER}" clean verify'
+  - wait
   - label: ":maven: Test JDK 8"
     agents:
       jdk8: "true"
@@ -16,6 +17,7 @@ steps:
       - 'mvn -Pjdk8 -Dchangelist="-${BUILDKITE_BUILD_NUMBER}-jdk8" clean verify'
     soft_fail:
       - exit_status: 1
+  - wait
   - label: ":maven: Test JDK 11"
     agents:
       jdk11: "true"
@@ -24,6 +26,7 @@ steps:
       - 'mvn -Pjdk11 -Dchangelist="-${BUILDKITE_BUILD_NUMBER}-jdk11" clean verify  '
     soft_fail:
       - exit_status: 1
+  - wait
   - label: ":maven: Verify"
     agents:
       jdk7: "true"
