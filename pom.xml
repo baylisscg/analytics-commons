@@ -86,6 +86,11 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>3.0.0-M1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-install-plugin</artifactId>
         <version>2.4</version>
       </plugin>
@@ -163,7 +168,9 @@
           <skip>${skipITs}</skip>
           <images>
             <image>
-              <name>repo.eresearch.unimelb.edu.au:8000/aurin/rserve@sha256:cba7ba37dbc5025aef1d24510359fffdeb14fadb834924920b3c5f8bc2356a58</name>
+              <name>
+                repo.eresearch.unimelb.edu.au:8000/aurin/rserve@sha256:cba7ba37dbc5025aef1d24510359fffdeb14fadb834924920b3c5f8bc2356a58
+              </name>
               <alias>it-serve</alias>
               <run>
                 <ports>
@@ -204,39 +211,30 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.3</version>
-        <configuration>
-          <includes>
-            <include>au.org.aurin.*</include>
-            <include>au.edu.uq.*</include>
-          </includes>
-        </configuration>
+        <version>0.8.4</version>
         <executions>
           <execution>
-            <id>pre-unit-test</id>
+            <id>default-prepare-agent</id>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
           </execution>
           <execution>
-            <id>post-unit-test</id>
-            <phase>test</phase>
+            <id>default-prepare-agent-integration</id>
+            <goals>
+              <goal>prepare-agent-integration</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>default-report</id>
             <goals>
               <goal>report</goal>
             </goals>
           </execution>
           <execution>
-            <id>pre-integration-test</id>
-            <phase>pre-integration-test</phase>
+            <id>default-report-integration</id>
             <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>post-integration-test</id>
-            <phase>post-integration-test</phase>
-            <goals>
-              <goal>report</goal>
+              <goal>report-integration</goal>
             </goals>
           </execution>
         </executions>
