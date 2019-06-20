@@ -33,7 +33,7 @@ steps:
       docker: "true"
     branches: "develop"
     command:
-      - 'mvn -Pjdk7 -Dchangelist="-${BUILDKITE_BUILD_NUMBER}" clean verify spotbugs:check dependency-check:aggregate'
+      - 'mvn -Pjdk7 -Dchangelist="-${BUILDKITE_BUILD_NUMBER}" clean verify spotbugs:spotbugs dependency-check:aggregate'
       - 'mvn -Pjdk7 -Dchangelist="-${BUILDKITE_BUILD_NUMBER}" sonar:sonar'
   - wait
   - label: ":maven: Deploy"
