@@ -205,17 +205,18 @@
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>0.8.3</version>
+        <configuration>
+          <includes>
+            <include>au.org.aurin.*</include>
+            <include>au.edu.uq.*</include>
+          </includes>
+        </configuration>
         <executions>
           <execution>
             <id>pre-unit-test</id>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
-            <configuration>
-              <includes>
-                <include>au.org.aurin.*</include>
-              </includes>
-            </configuration>
           </execution>
           <execution>
             <id>post-unit-test</id>
@@ -223,11 +224,6 @@
             <goals>
               <goal>report</goal>
             </goals>
-            <configuration>
-              <includes>
-                <include>au.org.aurin.*</include>
-              </includes>
-            </configuration>
           </execution>
           <execution>
             <id>pre-integration-test</id>
@@ -235,14 +231,6 @@
             <goals>
               <goal>prepare-agent</goal>
             </goals>
-            <configuration>
-              <includes>
-                <include>au.org.aurin.*</include>
-              </includes>
-              <excludes>
-                <exclude>**/*Exception.*</exclude>
-              </excludes>
-            </configuration>
           </execution>
           <execution>
             <id>post-integration-test</id>
@@ -250,11 +238,6 @@
             <goals>
               <goal>report</goal>
             </goals>
-            <configuration>
-              <includes>
-                <include>au.org.aurin.*</include>
-              </includes>
-            </configuration>
           </execution>
         </executions>
       </plugin>
